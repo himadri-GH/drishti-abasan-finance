@@ -75,7 +75,7 @@ export async function getPaymentOptions() {
 
 export async function getUnitDirectory() {
   if (!db) return [];
-  return db.select({ unitCode: propertyUnits.unitCode, unitType: propertyUnits.unitType, block: propertyUnits.block, ownerName: owners.fullName, phone: owners.phone, status: ownershipContracts.status, monthlyRate: ownershipContracts.monthlyRate }).from(ownershipContracts)
+  return db.select({ contractId: ownershipContracts.id, ownerId: owners.id, unitId: propertyUnits.id, unitCode: propertyUnits.unitCode, unitType: propertyUnits.unitType, block: propertyUnits.block, floorNumber: propertyUnits.floorNumber, ownerName: owners.fullName, phone: owners.phone, status: ownershipContracts.status, monthlyRate: ownershipContracts.monthlyRate }).from(ownershipContracts)
     .innerJoin(propertyUnits, eq(ownershipContracts.propertyUnitId, propertyUnits.id))
     .innerJoin(owners, eq(ownershipContracts.ownerId, owners.id)).orderBy(propertyUnits.unitCode);
 }
