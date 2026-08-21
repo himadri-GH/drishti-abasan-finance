@@ -1,6 +1,6 @@
 import { desc, eq, sql } from "drizzle-orm";
 import { db } from "./index";
-import { expenseLedger, monthlyCharges, ownershipContracts, paymentLedger, propertyUnits, owners, treasurySnapshots } from "./schema";
+import { expenseLedger, monthlyCharges, ownershipContracts, paymentLedger, propertyUnits, owners, societies, treasurySnapshots, vendorStaff } from "./schema";
 
 const emptyDashboard = {
   balance: 0,
@@ -92,4 +92,21 @@ export async function getReportSummary() {
     db.select({ value: sql<number>`count(*)` }).from(expenseLedger),
   ]);
   return { income: Number(income[0]?.value ?? 0), expenses: Number(expenses[0]?.value ?? 0), payments: Number(payments[0]?.value ?? 0), vouchers: Number(vouchers[0]?.value ?? 0) };
+}
+
+export async function getCollectionDirectory(billingMonth: string) {
+  if (!db) return [];
+  return db.select({ unitCode: propertyUnits.unitCode, ownerName: owners.fullName, amount: monthlyCharges.amountBilled, dueDate: monthlyCharges.dueDate, isPaid: monthlyCharges.isPaid }).from(monthlyCharges)
+    .innerJoin(ownershipContracts, eq(monthlyCharges.contractId, ownershipContracts.id)).innerJoin(propertyUnits, eq(ownershipContracts.propertyUnitId, propertyUnits.id)).innerJoin(owners, eq(ownershipContracts.ownerId, owners.id)).where(eq(monthlyCharges.billingMonth, billingMonth)).orderBy(propertyUnits.unitCode);
+}
+
+export async function getStaffDirectory() {
+  if (!db) return [];
+  return db.select({ name: vendorStaff.name, role: vendorStaff.role, phone: vendorStaff.phone, salary: vendorStaff.monthlySalary, status: vendorStaff.status }).from(vendorStaff).orderBy(vendorStaff.name);
+}
+
+export async function getSocietySettings() {
+  if (!db) return null;
+  const society = await db.select({ name: societies.name, registrationNo: societies.registrationNo, address: societies.address, currency: societies.currency }).from(societies).limit(1);
+  return society[0] ?? null;
 }

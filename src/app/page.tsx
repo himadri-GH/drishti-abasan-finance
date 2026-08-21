@@ -23,15 +23,15 @@ export default async function Home() {
         <div className={styles.sectionLabel}>Workspace</div>
         <nav className={styles.nav} aria-label="Main navigation">
           <a className={styles.active} href="#overview"><span>◈</span> Overview</a>
-          <a href="#collections"><span>◌</span> Collections <b>12</b></a>
+          <a href="/collections"><span>◌</span> Collections <b>12</b></a>
           <a href="/expenses"><span>↗</span> Expenses</a>
           <a href="/units"><span>⌂</span> Units & owners</a>
           <a href="/reports"><span>▥</span> Reports</a>
         </nav>
         <div className={styles.sectionLabel}>Manage</div>
         <nav className={styles.nav} aria-label="Management navigation">
-          <a href="#staff"><span>♙</span> Vendors & staff</a>
-          <a href="#settings"><span>⚙</span> Society settings</a>
+          <a href="/staff"><span>♙</span> Vendors & staff</a>
+          <a href="/settings"><span>⚙</span> Society settings</a>
         </nav>
         <div className={styles.sidebarBottom}>
           <div className={styles.sync}><span className={styles.dot} /> Cloud sync active <small>· Turso</small></div>
