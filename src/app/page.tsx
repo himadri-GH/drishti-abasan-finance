@@ -39,6 +39,17 @@ export default async function Home() {
         </div>
       </aside>
 
+      <nav className={styles.mobileNav} aria-label="Mobile navigation">
+        <a className={styles.mobileNavActive} href="#overview"><span>◈</span>Dashboard</a>
+        <a href="#payment"><span>＋</span>Payment</a>
+        <a href="#expense"><span>↗</span>Expense</a>
+        <a href="/units"><span>⌂</span>Units</a>
+        <a href="/collections"><span>◌</span>Collections</a>
+        <a href="/reports"><span>▥</span>Reports</a>
+        <a href="/staff"><span>♙</span>Staff</a>
+        <a href="/settings"><span>⚙</span>Settings</a>
+      </nav>
+
       <main className={styles.content} id="overview">
         <header className={styles.header}>
           <div><p className={styles.eyebrow}>Thursday, 21 August 2026</p><h1>Good morning, Admin <span>✦</span></h1></div>
