@@ -164,6 +164,16 @@ a.secondary {
   .primaryButton, .secondaryButton, .setupButton { padding: 0 10px; font-size: 9px; }
 }
 
+@media screen and (max-width: 760px) {
+  .shell { display: block; }
+  .sidebar { display: none !important; }
+  .mobileNav { display: grid; }
+  .content { width: 100%; padding: 22px 15px 30px; }
+  .header { gap: 15px; margin-bottom: 24px; }
+  .headerActions { flex-wrap: wrap; justify-content: flex-end; }
+  .iconButton { display: none; }
+}
+
 .code {
   font-family: var(--font-geist-mono);
   font-size: 0.9em;
