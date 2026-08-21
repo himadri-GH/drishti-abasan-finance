@@ -15,6 +15,12 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Drishti Abasan | Finance",
   description: "Financial management for Drishti Abasan building complex",
+  applicationName: "Drishti Abasan Finance",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Drishti Finance",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
