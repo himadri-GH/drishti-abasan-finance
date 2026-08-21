@@ -3,6 +3,7 @@ import { getDashboardData, getPaymentOptions } from "@/db/dashboard";
 import { PaymentForm } from "./payment-form";
 import { UnitSetupForm } from "./unit-setup-form";
 import { ExpenseForm } from "./expense-form";
+import { MobileMenu } from "./mobile-menu";
 
 export const dynamic = "force-dynamic";
 
@@ -39,16 +40,7 @@ export default async function Home() {
         </div>
       </aside>
 
-      <nav className={styles.mobileNav} aria-label="Mobile navigation">
-        <a className={styles.mobileNavActive} href="#overview"><span>◈</span>Dashboard</a>
-        <a href="#payment"><span>＋</span>Payment</a>
-        <a href="#expense"><span>↗</span>Expense</a>
-        <a href="/units"><span>⌂</span>Units</a>
-        <a href="/collections"><span>◌</span>Collections</a>
-        <a href="/reports"><span>▥</span>Reports</a>
-        <a href="/staff"><span>♙</span>Staff</a>
-        <a href="/settings"><span>⚙</span>Settings</a>
-      </nav>
+      <MobileMenu />
 
       <main className={styles.content} id="overview">
         <header className={styles.header}>
