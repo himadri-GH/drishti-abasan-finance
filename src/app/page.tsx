@@ -1,5 +1,5 @@
 import styles from "./page.module.css";
-import { getDashboardData } from "@/db/dashboard";
+import { getDashboardData, getPaymentOptions } from "@/db/dashboard";
 import { PaymentForm } from "./payment-form";
 
 export const dynamic = "force-dynamic";
@@ -8,6 +8,7 @@ const money = (amount: number) => `₹${amount.toLocaleString("en-IN", { maximum
 
 export default async function Home() {
   const dashboard = await getDashboardData("2026-08");
+  const paymentOptions = await getPaymentOptions();
   const collectionPercent = dashboard.expected ? Math.round((dashboard.collected / dashboard.expected) * 100) : 0;
 
   return (
@@ -39,7 +40,7 @@ export default async function Home() {
       <main className={styles.content} id="overview">
         <header className={styles.header}>
           <div><p className={styles.eyebrow}>Thursday, 21 August 2026</p><h1>Good morning, Admin <span>✦</span></h1></div>
-          <div className={styles.headerActions}><button className={styles.iconButton} aria-label="Notifications">♢</button><PaymentForm /></div>
+          <div className={styles.headerActions}><button className={styles.iconButton} aria-label="Notifications">♢</button><PaymentForm options={paymentOptions} /></div>
         </header>
 
         <section className={styles.heroGrid} aria-label="Financial overview">

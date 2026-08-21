@@ -3,7 +3,9 @@
 import { FormEvent, useState } from "react";
 import styles from "./page.module.css";
 
-export function PaymentForm() {
+type PaymentOption = { id: string; unitCode: string; ownerName: string; monthlyRate: number };
+
+export function PaymentForm({ options }: { options: PaymentOption[] }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
@@ -22,6 +24,7 @@ export function PaymentForm() {
       <form className={styles.modal} onSubmit={submit}>
         <div className={styles.modalHeading}><div><p className={styles.eyebrow}>New receipt</p><h3>Record a payment</h3></div><button type="button" className={styles.closeButton} onClick={() => setOpen(false)} aria-label="Close">×</button></div>
         <label>Payer name<input name="payerName" placeholder="Resident or payer name" required /></label>
+        <label>Unit and owner<select name="contractId" defaultValue=""><option value="">General income / no unit</option>{options.map((option) => <option value={option.id} key={option.id}>{option.unitCode} · {option.ownerName} · ₹{option.monthlyRate.toLocaleString("en-IN")}/month</option>)}</select></label>
         <div className={styles.formRow}><label>Amount<input name="amountReceived" type="number" min="1" step="0.01" placeholder="1500" required /></label><label>Payment mode<select name="paymentMode" defaultValue="UPI"><option>UPI</option><option>NEFT</option><option>CASH</option><option>CHEQUE</option></select></label></div>
         <label>Month covered<input name="monthCovered" defaultValue="August 2026" required /></label>
         <label>Reference or note<input name="notes" placeholder="Optional" /></label>

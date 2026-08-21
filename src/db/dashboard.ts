@@ -1,6 +1,6 @@
 import { desc, eq, sql } from "drizzle-orm";
 import { db } from "./index";
-import { expenseLedger, monthlyCharges, paymentLedger, treasurySnapshots } from "./schema";
+import { expenseLedger, monthlyCharges, ownershipContracts, paymentLedger, propertyUnits, owners, treasurySnapshots } from "./schema";
 
 const emptyDashboard = {
   balance: 0,
@@ -56,4 +56,17 @@ export async function getDashboardData(billingMonth: string) {
       tone: "income" as const,
     })),
   };
+}
+
+export async function getPaymentOptions() {
+  if (!db) return [];
+  return db.select({
+    id: ownershipContracts.id,
+    unitCode: propertyUnits.unitCode,
+    ownerName: owners.fullName,
+    monthlyRate: ownershipContracts.monthlyRate,
+  }).from(ownershipContracts)
+    .innerJoin(propertyUnits, eq(ownershipContracts.propertyUnitId, propertyUnits.id))
+    .innerJoin(owners, eq(ownershipContracts.ownerId, owners.id))
+    .where(eq(ownershipContracts.status, "ACTIVE"));
 }
