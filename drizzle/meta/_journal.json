@@ -8,6 +8,13 @@
       "when": 1787315121855,
       "tag": "0000_wandering_prowler",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1787338574871,
+      "tag": "0001_hesitant_blur",
+      "breakpoints": true
     }
   ]
 }

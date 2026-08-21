@@ -4,6 +4,7 @@ import { PaymentForm } from "./payment-form";
 import { UnitSetupForm } from "./unit-setup-form";
 import { ExpenseForm } from "./expense-form";
 import { MobileMenu } from "./mobile-menu";
+import { VoidButton } from "./void-button";
 
 export const dynamic = "force-dynamic";
 
@@ -65,7 +66,7 @@ export default async function Home() {
         <section className={styles.lowerGrid}>
           <div className={`${styles.panel} ${styles.activityPanel}`} id="expenses">
             <div className={styles.panelHeading}><div><p className={styles.eyebrow}>Treasury snapshot</p><h3>Recent activity</h3></div><button className={styles.quietButton}>View ledger <span>↗</span></button></div>
-            <div className={styles.activityList}>{dashboard.payments.length ? dashboard.payments.map((item) => <div className={styles.activityRow} key={`${item.label}-${item.amount}`}><span className={`${styles.activityIcon} ${styles[item.tone]}`}>↓</span><div><strong>{item.label}</strong><small>{item.detail}</small></div><b className={styles[item.tone]}>+{money(item.amount)}</b></div>) : <div className={styles.emptyState}>No payments recorded yet. Start with a payment receipt.</div>}</div>
+            <div className={styles.activityList}>{dashboard.payments.length ? dashboard.payments.map((item) => <div className={styles.activityRow} key={`${item.label}-${item.amount}`}><span className={`${styles.activityIcon} ${styles[item.tone]}`}>↓</span><div><strong>{item.label}</strong><small>{item.detail}</small></div><b className={styles[item.tone]}>+{money(item.amount)}</b><VoidButton kind="payment" id={item.id} /></div>) : <div className={styles.emptyState}>No payments recorded yet. Start with a payment receipt.</div>}</div>
           </div>
           <div className={`${styles.panel} ${styles.actionsPanel}`}>
             <div className={styles.panelHeading}><div><p className={styles.eyebrow}>Quick actions</p><h3>Keep things moving</h3></div></div>

@@ -11,7 +11,7 @@ const emptyDashboard = {
   paidUnits: 0,
   awaiting: 0,
   overdue: 0,
-  payments: [] as Array<{ label: string; detail: string; amount: number; tone: "income" | "expense" }>,
+  payments: [] as Array<{ id: string; label: string; detail: string; amount: number; tone: "income" | "expense" }>,
 };
 
 export async function getDashboardData(billingMonth: string) {
@@ -19,8 +19,8 @@ export async function getDashboardData(billingMonth: string) {
 
   const [balanceRow, inflowRow, outflowRow, collectionRow] = await Promise.all([
     db.select({ value: treasurySnapshots.balanceAfter }).from(treasurySnapshots).orderBy(desc(treasurySnapshots.timestamp)).limit(1),
-    db.select({ value: sql<number>`coalesce(sum(${paymentLedger.amountReceived}), 0)` }).from(paymentLedger),
-    db.select({ value: sql<number>`coalesce(sum(${expenseLedger.amount}), 0)` }).from(expenseLedger),
+    db.select({ value: sql<number>`coalesce(sum(${paymentLedger.amountReceived}), 0)` }).from(paymentLedger).where(eq(paymentLedger.status, "ACTIVE")),
+    db.select({ value: sql<number>`coalesce(sum(${expenseLedger.amount}), 0)` }).from(expenseLedger).where(eq(expenseLedger.status, "ACTIVE")),
     db.select({
       expected: sql<number>`coalesce(sum(${monthlyCharges.amountBilled}), 0)`,
       collected: sql<number>`coalesce(sum(case when ${monthlyCharges.isPaid} = 1 then ${monthlyCharges.amountBilled} else 0 end), 0)`,
@@ -30,11 +30,12 @@ export async function getDashboardData(billingMonth: string) {
   ]);
 
   const recentPayments = await db.select({
+    id: paymentLedger.id,
     payerName: paymentLedger.payerName,
     amount: paymentLedger.amountReceived,
     mode: paymentLedger.paymentMode,
     category: paymentLedger.incomeCategory,
-  }).from(paymentLedger).orderBy(desc(paymentLedger.paymentDate)).limit(4);
+  }).from(paymentLedger).where(eq(paymentLedger.status, "ACTIVE")).orderBy(desc(paymentLedger.paymentDate)).limit(4);
 
   const expected = Number(collectionRow[0]?.expected ?? 0);
   const paidUnits = Number(collectionRow[0]?.paidUnits ?? 0);
@@ -50,6 +51,7 @@ export async function getDashboardData(billingMonth: string) {
     awaiting: Math.max(totalUnits - paidUnits, 0),
     overdue: 0,
     payments: recentPayments.map((payment) => ({
+      id: payment.id,
       label: `${payment.category.replaceAll("_", " ")} · ${payment.payerName}`,
       detail: payment.mode,
       amount: Number(payment.amount),
@@ -80,14 +82,14 @@ export async function getUnitDirectory() {
 
 export async function getExpenseDirectory() {
   if (!db) return [];
-  return db.select({ voucherNo: expenseLedger.voucherNo, paidTo: expenseLedger.paidTo, category: expenseLedger.category, amount: expenseLedger.amount, paymentMode: expenseLedger.paymentMode, expenseDate: expenseLedger.expenseDate }).from(expenseLedger).orderBy(desc(expenseLedger.expenseDate)).limit(50);
+  return db.select({ id: expenseLedger.id, voucherNo: expenseLedger.voucherNo, paidTo: expenseLedger.paidTo, category: expenseLedger.category, amount: expenseLedger.amount, paymentMode: expenseLedger.paymentMode, expenseDate: expenseLedger.expenseDate, status: expenseLedger.status }).from(expenseLedger).orderBy(desc(expenseLedger.expenseDate)).limit(50);
 }
 
 export async function getReportSummary() {
   if (!db) return { income: 0, expenses: 0, payments: 0, vouchers: 0 };
   const [income, expenses, payments, vouchers] = await Promise.all([
-    db.select({ value: sql<number>`coalesce(sum(${paymentLedger.amountReceived}), 0)` }).from(paymentLedger),
-    db.select({ value: sql<number>`coalesce(sum(${expenseLedger.amount}), 0)` }).from(expenseLedger),
+    db.select({ value: sql<number>`coalesce(sum(${paymentLedger.amountReceived}), 0)` }).from(paymentLedger).where(eq(paymentLedger.status, "ACTIVE")),
+    db.select({ value: sql<number>`coalesce(sum(${expenseLedger.amount}), 0)` }).from(expenseLedger).where(eq(expenseLedger.status, "ACTIVE")),
     db.select({ value: sql<number>`count(*)` }).from(paymentLedger),
     db.select({ value: sql<number>`count(*)` }).from(expenseLedger),
   ]);
