@@ -1,6 +1,7 @@
 import styles from "./page.module.css";
 import { getDashboardData, getPaymentOptions } from "@/db/dashboard";
 import { PaymentForm } from "./payment-form";
+import { UnitSetupForm } from "./unit-setup-form";
 
 export const dynamic = "force-dynamic";
 
@@ -40,7 +41,7 @@ export default async function Home() {
       <main className={styles.content} id="overview">
         <header className={styles.header}>
           <div><p className={styles.eyebrow}>Thursday, 21 August 2026</p><h1>Good morning, Admin <span>✦</span></h1></div>
-          <div className={styles.headerActions}><button className={styles.iconButton} aria-label="Notifications">♢</button><PaymentForm options={paymentOptions} /></div>
+          <div className={styles.headerActions}><button className={styles.iconButton} aria-label="Notifications">♢</button>{paymentOptions.length === 0 && <UnitSetupForm />}<PaymentForm options={paymentOptions} /></div>
         </header>
 
         <section className={styles.heroGrid} aria-label="Financial overview">
