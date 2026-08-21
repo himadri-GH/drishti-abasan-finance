@@ -70,3 +70,26 @@ export async function getPaymentOptions() {
     .innerJoin(owners, eq(ownershipContracts.ownerId, owners.id))
     .where(eq(ownershipContracts.status, "ACTIVE"));
 }
+
+export async function getUnitDirectory() {
+  if (!db) return [];
+  return db.select({ unitCode: propertyUnits.unitCode, unitType: propertyUnits.unitType, block: propertyUnits.block, ownerName: owners.fullName, phone: owners.phone, status: ownershipContracts.status, monthlyRate: ownershipContracts.monthlyRate }).from(ownershipContracts)
+    .innerJoin(propertyUnits, eq(ownershipContracts.propertyUnitId, propertyUnits.id))
+    .innerJoin(owners, eq(ownershipContracts.ownerId, owners.id)).orderBy(propertyUnits.unitCode);
+}
+
+export async function getExpenseDirectory() {
+  if (!db) return [];
+  return db.select({ voucherNo: expenseLedger.voucherNo, paidTo: expenseLedger.paidTo, category: expenseLedger.category, amount: expenseLedger.amount, paymentMode: expenseLedger.paymentMode, expenseDate: expenseLedger.expenseDate }).from(expenseLedger).orderBy(desc(expenseLedger.expenseDate)).limit(50);
+}
+
+export async function getReportSummary() {
+  if (!db) return { income: 0, expenses: 0, payments: 0, vouchers: 0 };
+  const [income, expenses, payments, vouchers] = await Promise.all([
+    db.select({ value: sql<number>`coalesce(sum(${paymentLedger.amountReceived}), 0)` }).from(paymentLedger),
+    db.select({ value: sql<number>`coalesce(sum(${expenseLedger.amount}), 0)` }).from(expenseLedger),
+    db.select({ value: sql<number>`count(*)` }).from(paymentLedger),
+    db.select({ value: sql<number>`count(*)` }).from(expenseLedger),
+  ]);
+  return { income: Number(income[0]?.value ?? 0), expenses: Number(expenses[0]?.value ?? 0), payments: Number(payments[0]?.value ?? 0), vouchers: Number(vouchers[0]?.value ?? 0) };
+}

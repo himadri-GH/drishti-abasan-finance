@@ -2,6 +2,7 @@ import styles from "./page.module.css";
 import { getDashboardData, getPaymentOptions } from "@/db/dashboard";
 import { PaymentForm } from "./payment-form";
 import { UnitSetupForm } from "./unit-setup-form";
+import { ExpenseForm } from "./expense-form";
 
 export const dynamic = "force-dynamic";
 
@@ -23,9 +24,9 @@ export default async function Home() {
         <nav className={styles.nav} aria-label="Main navigation">
           <a className={styles.active} href="#overview"><span>◈</span> Overview</a>
           <a href="#collections"><span>◌</span> Collections <b>12</b></a>
-          <a href="#expenses"><span>↗</span> Expenses</a>
-          <a href="#units"><span>⌂</span> Units & owners</a>
-          <a href="#reports"><span>▥</span> Reports</a>
+          <a href="/expenses"><span>↗</span> Expenses</a>
+          <a href="/units"><span>⌂</span> Units & owners</a>
+          <a href="/reports"><span>▥</span> Reports</a>
         </nav>
         <div className={styles.sectionLabel}>Manage</div>
         <nav className={styles.nav} aria-label="Management navigation">
@@ -41,7 +42,7 @@ export default async function Home() {
       <main className={styles.content} id="overview">
         <header className={styles.header}>
           <div><p className={styles.eyebrow}>Thursday, 21 August 2026</p><h1>Good morning, Admin <span>✦</span></h1></div>
-          <div className={styles.headerActions}><button className={styles.iconButton} aria-label="Notifications">♢</button>{paymentOptions.length === 0 && <UnitSetupForm />}<PaymentForm options={paymentOptions} /></div>
+          <div className={styles.headerActions}><button className={styles.iconButton} aria-label="Notifications">♢</button>{paymentOptions.length === 0 && <UnitSetupForm />}<ExpenseForm /><PaymentForm options={paymentOptions} /></div>
         </header>
 
         <section className={styles.heroGrid} aria-label="Financial overview">
