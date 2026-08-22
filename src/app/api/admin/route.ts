@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { blocks, societies, vendorStaff } from "@/db/schema";
+import { blocks, expenseLedger, societies, vendorStaff } from "@/db/schema";
 
 const tableFor = (type: string) => type === "block" ? blocks : type === "vendor" ? vendorStaff : null;
 
@@ -41,7 +41,11 @@ export async function PATCH(request: Request) {
 export async function DELETE(request: Request) {
   if (!db) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
   const body = await request.json(); const table = tableFor(String(body.type ?? "")); if (!table || !body.id) return NextResponse.json({ error: "Invalid record." }, { status: 400 });
-  if (body.type === "block") await db.update(blocks).set({ status: "INACTIVE", updatedAt: new Date().toISOString() }).where(eq(blocks.id, body.id));
-  else await db.update(vendorStaff).set({ status: "INACTIVE", updatedAt: new Date().toISOString() }).where(eq(vendorStaff.id, body.id));
+  if (body.type === "block") await db.delete(blocks).where(eq(blocks.id, body.id));
+  else {
+    const linked = await db.select({ id: expenseLedger.id }).from(expenseLedger).where(eq(expenseLedger.vendorId, body.id)).limit(1);
+    if (linked[0]) return NextResponse.json({ error: "This vendor is linked to an expense and cannot be deleted. Deactivate it instead." }, { status: 409 });
+    await db.delete(vendorStaff).where(eq(vendorStaff.id, body.id));
+  }
   return NextResponse.json({ ok: true });
 }

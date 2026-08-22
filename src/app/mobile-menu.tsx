@@ -9,6 +9,8 @@ const links = [
   ["↗", "Expenses", "/expenses"],
   ["⌂", "Units", "/units"],
   ["▥", "Reports", "/reports"],
+  ["⌘", "Contracts", "/contracts"],
+  ["≡", "Full ledger", "/ledger"],
   ["♙", "Staff", "/staff"],
   ["⚙", "Settings", "/settings"],
   ["✎", "Manage data", "/admin"],

@@ -1,0 +1,6 @@
+import { eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
+import { db } from "@/db";
+import { monthlyCharges } from "@/db/schema";
+export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) { if (!db) return NextResponse.json({ error: "Database is not configured." }, { status: 503 }); const { id } = await context.params; const body = await request.json(); const amount = Number(body.amount); const dueDate = String(body.dueDate ?? ""); if (!Number.isFinite(amount) || amount <= 0 || !dueDate) return NextResponse.json({ error: "Enter a valid amount and due date." }, { status: 400 }); await db.update(monthlyCharges).set({ amountBilled: amount, dueDate, updatedAt: new Date().toISOString() }).where(eq(monthlyCharges.id, id)); return NextResponse.json({ ok: true }); }
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) { if (!db) return NextResponse.json({ error: "Database is not configured." }, { status: 503 }); const { id } = await context.params; const body = await request.json().catch(() => ({})); await db.update(monthlyCharges).set({ status: "VOIDED", voidReason: String(body.reason ?? "Charge voided"), voidedAt: new Date().toISOString(), updatedAt: new Date().toISOString() }).where(eq(monthlyCharges.id, id)); return NextResponse.json({ ok: true }); }

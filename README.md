@@ -20,7 +20,8 @@ The schema follows `Dristi Abason_Database Acrhitechture Scheme.docx`, including
 1. Create an empty GitHub repository and push this folder to it.
 2. Import that repository into Vercel.
 3. Add `TURSO_DATABASE_URL` and `TURSO_AUTH_TOKEN` in Vercel for Production, Preview, and Development.
-4. Every push to the selected GitHub branch creates a deployment.
+4. Add `ADMIN_PASSWORD` and `ADMIN_ACCESS_SECRET` in the same environments. Use a strong password and a long random secret.
+5. Every push to the selected GitHub branch creates a deployment.
 
 No local server is needed to use the deployed application. `npm run dev` is only for previewing changes before pushing.
 

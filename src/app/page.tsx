@@ -29,6 +29,8 @@ export default async function Home() {
           <a href="/expenses"><span>↗</span> Expenses</a>
           <a href="/units"><span>⌂</span> Units & owners</a>
           <a href="/reports"><span>▥</span> Reports</a>
+          <a href="/contracts"><span>⌘</span> Contracts</a>
+          <a href="/ledger"><span>≡</span> Full ledger</a>
         </nav>
         <div className={styles.sectionLabel}>Manage</div>
         <nav className={styles.nav} aria-label="Management navigation">
