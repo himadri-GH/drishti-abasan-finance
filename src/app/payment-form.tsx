@@ -26,7 +26,7 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
         <label>Payer name<input name="payerName" placeholder="Resident or payer name" required /></label>
         <label>Unit and owner<select name="contractId" defaultValue=""><option value="">General income / no unit</option>{options.map((option) => <option value={option.id} key={option.id}>{option.unitCode} · {option.ownerName} · ₹{option.monthlyRate.toLocaleString("en-IN")}/month</option>)}</select></label>
         <div className={styles.formRow}><label>Amount<input name="amountReceived" type="number" min="1" step="0.01" placeholder="1500" required /></label><label>Payment mode<select name="paymentMode" defaultValue="UPI"><option>UPI</option><option>NEFT</option><option>CASH</option><option>CHEQUE</option></select></label></div>
-        <label>Month covered<input name="monthCovered" defaultValue="August 2026" required /></label>
+        <label>Month covered<input name="billingMonth" type="month" defaultValue="2026-08" required /></label>
         <label>Reference or note<input name="notes" placeholder="Optional" /></label>
         {message && <p className={styles.formMessage}>{message}</p>}
         <button className={styles.primaryButton} disabled={saving}>{saving ? "Saving..." : "Save payment"}</button>

@@ -1,0 +1,2 @@
+CREATE UNIQUE INDEX `ownership_contracts_contract_code` ON `ownership_contracts` (`contract_code`);--> statement-breakpoint
+CREATE UNIQUE INDEX `ownership_contracts_active_unit` ON `ownership_contracts` (`property_unit_id`) WHERE "ownership_contracts"."status" = 'ACTIVE';

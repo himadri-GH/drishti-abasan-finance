@@ -90,8 +90,8 @@ export async function getReportSummary() {
   const [income, expenses, payments, vouchers] = await Promise.all([
     db.select({ value: sql<number>`coalesce(sum(${paymentLedger.amountReceived}), 0)` }).from(paymentLedger).where(eq(paymentLedger.status, "ACTIVE")),
     db.select({ value: sql<number>`coalesce(sum(${expenseLedger.amount}), 0)` }).from(expenseLedger).where(eq(expenseLedger.status, "ACTIVE")),
-    db.select({ value: sql<number>`count(*)` }).from(paymentLedger),
-    db.select({ value: sql<number>`count(*)` }).from(expenseLedger),
+    db.select({ value: sql<number>`count(*)` }).from(paymentLedger).where(eq(paymentLedger.status, "ACTIVE")),
+    db.select({ value: sql<number>`count(*)` }).from(expenseLedger).where(eq(expenseLedger.status, "ACTIVE")),
   ]);
   return { income: Number(income[0]?.value ?? 0), expenses: Number(expenses[0]?.value ?? 0), payments: Number(payments[0]?.value ?? 0), vouchers: Number(vouchers[0]?.value ?? 0) };
 }

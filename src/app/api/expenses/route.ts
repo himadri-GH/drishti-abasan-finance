@@ -10,8 +10,8 @@ export async function POST(request: Request) {
   const paidTo = String(body.paidTo ?? "").trim();
   const category = String(body.category ?? "").trim();
   const paymentMode = String(body.paymentMode ?? "").trim();
-  if (!paidTo || !category || !paymentMode || !Number.isFinite(amount) || amount <= 0) {
-    return NextResponse.json({ error: "Enter a vendor, category, payment mode, and positive amount." }, { status: 400 });
+  if (!paidTo || !["SECURITY", "LIFT_AMC", "ELECTRICITY", "REPAIRS", "DIESEL", "CLEANING"].includes(category) || !["UPI", "NEFT", "CASH", "CHEQUE"].includes(paymentMode) || !Number.isFinite(amount) || amount <= 0) {
+    return NextResponse.json({ error: "Enter a vendor, valid category, payment mode, and positive amount." }, { status: 400 });
   }
 
   const society = await db.select({ id: societies.id }).from(societies).limit(1);

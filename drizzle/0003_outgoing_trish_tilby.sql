@@ -1,0 +1,1 @@
+ALTER TABLE `treasury_snapshots` ADD `reversal_of_snapshot_id` text;
