@@ -43,6 +43,13 @@
       "when": 1787373163725,
       "tag": "0005_ancient_hulk",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1787373163726,
+      "tag": "0006_monthly_charge_voiding",
+      "breakpoints": true
     }
   ]
 }
