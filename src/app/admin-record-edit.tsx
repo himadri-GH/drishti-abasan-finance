@@ -1,0 +1,11 @@
+"use client";
+
+import { FormEvent, useState } from "react";
+import styles from "./page.module.css";
+
+type Props = { type: "block" | "vendor"; id: string; name: string; description?: string; role?: string; phone?: string; monthlySalary?: number };
+export function AdminRecordEdit({ type, id, name, description = "", role = "OTHER", phone = "", monthlySalary = 0 }: Props) {
+  const [open, setOpen] = useState(false); const [saving, setSaving] = useState(false); const [message, setMessage] = useState("");
+  async function submit(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setSaving(true); const response = await fetch("/api/admin", { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...Object.fromEntries(new FormData(event.currentTarget)), type, id }) }); setSaving(false); if (!response.ok) { setMessage("Could not save."); return; } setOpen(false); window.location.reload(); }
+  return <><button className={styles.editButton} onClick={() => setOpen(true)}>Edit</button>{open && <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}><form className={styles.modal} onSubmit={submit}><div className={styles.modalHeading}><div><p className={styles.eyebrow}>Admin record</p><h3>Edit {type === "block" ? "block" : "vendor/staff"}</h3></div><button type="button" className={styles.closeButton} onClick={() => setOpen(false)} aria-label="Close">×</button></div><label>Name<input name="name" defaultValue={name} required /></label>{type === "block" ? <label>Description<input name="description" defaultValue={description} /></label> : <><div className={styles.formRow}><label>Role<select name="role" defaultValue={role}><option>SECURITY_GUARD</option><option>SWEEPER</option><option>ELECTRICIAN</option><option>LIFT_AGENCY</option><option>OTHER</option></select></label><label>Phone<input name="phone" defaultValue={phone} /></label></div><label>Monthly salary<input name="monthlySalary" type="number" min="0" defaultValue={monthlySalary} /></label></>}{message && <p className={styles.formMessage}>{message}</p>}<button className={styles.primaryButton} disabled={saving}>{saving ? "Saving..." : "Save changes"}</button></form></div>}</>;
+}

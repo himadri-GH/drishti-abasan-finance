@@ -9,6 +9,9 @@ const timestamps = {
 export const societies = sqliteTable("societies", {
   id: text("id").primaryKey(), name: text("name").notNull(), registrationNo: text("registration_no"), address: text("address"), currency: text("currency").notNull().default("INR"), ...timestamps,
 });
+export const blocks = sqliteTable("blocks", {
+  id: text("id").primaryKey(), societyId: text("society_id").notNull().references(() => societies.id), name: text("name").notNull(), description: text("description"), status: text("status").notNull().default("ACTIVE"), ...timestamps,
+}, (table) => ({ societyBlockUnique: uniqueIndex("blocks_society_name").on(table.societyId, table.name) }));
 export const owners = sqliteTable("owners", {
   id: text("id").primaryKey(), societyId: text("society_id").notNull().references(() => societies.id), fullName: text("full_name").notNull(), phone: text("phone").notNull(), alternatePhone: text("alternate_phone"), email: text("email"), permanentAddress: text("permanent_address"), ...timestamps,
 });

@@ -34,6 +34,7 @@ export default async function Home() {
         <nav className={styles.nav} aria-label="Management navigation">
           <a href="/staff"><span>♙</span> Vendors & staff</a>
           <a href="/settings"><span>⚙</span> Society settings</a>
+          <a href="/admin"><span>✎</span> Manage data</a>
         </nav>
         <div className={styles.sidebarBottom}>
           <div className={styles.sync}><span className={styles.dot} /> Cloud sync active <small>· Turso</small></div>

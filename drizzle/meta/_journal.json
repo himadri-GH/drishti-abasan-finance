@@ -36,6 +36,13 @@
       "when": 1787371027566,
       "tag": "0004_organic_crusher_hogan",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1787373163725,
+      "tag": "0005_ancient_hulk",
+      "breakpoints": true
     }
   ]
 }

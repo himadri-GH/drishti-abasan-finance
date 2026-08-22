@@ -104,7 +104,7 @@ export async function getCollectionDirectory(billingMonth: string) {
 
 export async function getStaffDirectory() {
   if (!db) return [];
-  return db.select({ name: vendorStaff.name, role: vendorStaff.role, phone: vendorStaff.phone, salary: vendorStaff.monthlySalary, status: vendorStaff.status }).from(vendorStaff).orderBy(vendorStaff.name);
+  return db.select({ id: vendorStaff.id, name: vendorStaff.name, role: vendorStaff.role, phone: vendorStaff.phone, salary: vendorStaff.monthlySalary, status: vendorStaff.status }).from(vendorStaff).orderBy(vendorStaff.name);
 }
 
 export async function getSocietySettings() {

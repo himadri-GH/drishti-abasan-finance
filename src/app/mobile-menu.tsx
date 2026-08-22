@@ -11,6 +11,7 @@ const links = [
   ["▥", "Reports", "/reports"],
   ["♙", "Staff", "/staff"],
   ["⚙", "Settings", "/settings"],
+  ["✎", "Manage data", "/admin"],
 ];
 
 export function MobileMenu() {
