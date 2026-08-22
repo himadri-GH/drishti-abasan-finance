@@ -75,7 +75,7 @@ export async function getPaymentOptions() {
 
 export async function getUnitDirectory() {
   if (!db) return [];
-  return db.select({ contractId: ownershipContracts.id, ownerId: owners.id, unitId: propertyUnits.id, unitCode: propertyUnits.unitCode, unitType: propertyUnits.unitType, block: propertyUnits.block, floorNumber: propertyUnits.floorNumber, ownerName: owners.fullName, phone: owners.phone, status: ownershipContracts.status, monthlyRate: ownershipContracts.monthlyRate }).from(ownershipContracts)
+  return db.select({ contractId: ownershipContracts.id, ownerId: owners.id, unitId: propertyUnits.id, unitCode: propertyUnits.unitCode, unitType: propertyUnits.unitType, block: propertyUnits.block, floorNumber: propertyUnits.floorNumber, ownerName: owners.fullName, phone: owners.phone, status: ownershipContracts.status, monthlyRate: ownershipContracts.monthlyRate, balance: sql<number>`${ownershipContracts.openingBalance} + coalesce((select sum(mc.amount_billed) from monthly_charges mc where mc.contract_id = ${ownershipContracts.id}), 0) - coalesce((select sum(pa.amount_applied) from payment_allocations pa where pa.charge_id in (select mc2.id from monthly_charges mc2 where mc2.contract_id = ${ownershipContracts.id}) and pa.status = 'ACTIVE'), 0)` }).from(ownershipContracts)
     .innerJoin(propertyUnits, eq(ownershipContracts.propertyUnitId, propertyUnits.id))
     .innerJoin(owners, eq(ownershipContracts.ownerId, owners.id)).orderBy(propertyUnits.unitCode);
 }
@@ -98,7 +98,7 @@ export async function getReportSummary() {
 
 export async function getCollectionDirectory(billingMonth: string) {
   if (!db) return [];
-  return db.select({ unitCode: propertyUnits.unitCode, ownerName: owners.fullName, amount: monthlyCharges.amountBilled, dueDate: monthlyCharges.dueDate, isPaid: monthlyCharges.isPaid }).from(monthlyCharges)
+  return db.select({ unitCode: propertyUnits.unitCode, ownerName: owners.fullName, amount: monthlyCharges.amountBilled, amountPaid: sql<number>`coalesce((select sum(pa.amount_applied) from payment_allocations pa where pa.charge_id = ${monthlyCharges.id} and pa.status = 'ACTIVE'), 0)`, dueDate: monthlyCharges.dueDate, isPaid: monthlyCharges.isPaid }).from(monthlyCharges)
     .innerJoin(ownershipContracts, eq(monthlyCharges.contractId, ownershipContracts.id)).innerJoin(propertyUnits, eq(ownershipContracts.propertyUnitId, propertyUnits.id)).innerJoin(owners, eq(ownershipContracts.ownerId, owners.id)).where(eq(monthlyCharges.billingMonth, billingMonth)).orderBy(propertyUnits.unitCode);
 }
 

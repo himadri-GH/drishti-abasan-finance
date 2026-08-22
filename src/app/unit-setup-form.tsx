@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import styles from "./page.module.css";
 
-export function UnitSetupForm() {
+export function UnitSetupForm({ buttonLabel = "＋ Add first unit" }: { buttonLabel?: string }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
@@ -17,7 +17,7 @@ export function UnitSetupForm() {
   }
 
   return <>
-    <button className={styles.setupButton} onClick={() => setOpen(true)}>＋ Add first unit</button>
+    <button className={styles.setupButton} onClick={() => setOpen(true)}>{buttonLabel}</button>
     {open && <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}>
       <form className={styles.modal} onSubmit={submit}>
         <div className={styles.modalHeading}><div><p className={styles.eyebrow}>Building setup</p><h3>Add owner and unit</h3></div><button type="button" className={styles.closeButton} onClick={() => setOpen(false)} aria-label="Close">×</button></div>

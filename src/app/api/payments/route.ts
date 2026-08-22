@@ -27,6 +27,7 @@ export async function POST(request: Request) {
       let monthlyRate: number | null = null;
       let balanceBeforePayment: number | null = null;
       let unappliedAmount = amountReceived;
+      const pendingAllocations: Array<{ chargeId: string; amountApplied: number; isPaid: boolean }> = [];
 
       if (contractId) {
         const contract = await tx.select({ monthlyRate: ownershipContracts.monthlyRate, openingBalance: ownershipContracts.openingBalance }).from(ownershipContracts).where(eq(ownershipContracts.id, contractId)).limit(1);
@@ -41,8 +42,7 @@ export async function POST(request: Request) {
           const remaining = Math.max(Number(charge.amount) - (allocatedByCharge.get(charge.id) ?? 0), 0);
           const applied = Math.min(remaining, unappliedAmount);
           if (applied > 0) {
-            await tx.insert(paymentAllocations).values({ id: crypto.randomUUID(), paymentId, chargeId: charge.id, amountApplied: applied });
-            await tx.update(monthlyCharges).set({ isPaid: applied >= remaining }).where(eq(monthlyCharges.id, charge.id));
+            pendingAllocations.push({ chargeId: charge.id, amountApplied: applied, isPaid: applied >= remaining });
             unappliedAmount -= applied;
           }
           if (unappliedAmount <= 0) break;
@@ -50,6 +50,10 @@ export async function POST(request: Request) {
       }
 
       await tx.insert(paymentLedger).values({ id: paymentId, receiptNo, paymentDate, amountReceived, incomeCategory: "MAINTENANCE", sourceType: contractId ? "RESIDENT" : "THIRD_PARTY", payerName, contractId, appliedMonthlyRate: monthlyRate, balanceBeforePayment, unappliedAmount, monthCovered, paymentMode, referenceNo: body.referenceNo ? String(body.referenceNo).trim() : null, notes: body.notes ? String(body.notes).trim() : null });
+      if (pendingAllocations.length) {
+        await tx.insert(paymentAllocations).values(pendingAllocations.map((allocation) => ({ id: crypto.randomUUID(), paymentId, chargeId: allocation.chargeId, amountApplied: allocation.amountApplied })));
+        for (const allocation of pendingAllocations) await tx.update(monthlyCharges).set({ isPaid: allocation.isPaid }).where(eq(monthlyCharges.id, allocation.chargeId));
+      }
       await tx.insert(treasurySnapshots).values({ id: crypto.randomUUID(), societyId: society[0].id, timestamp: paymentDate, transactionType: "INCOME", balanceBefore, amountChanged: amountReceived, balanceAfter: balanceBefore + amountReceived, paymentId });
     });
   } catch (error) {
