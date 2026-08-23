@@ -110,12 +110,21 @@ export function UnitSetupForm({
               />
             </label>
 
+            <label>
+               Email address
+              <input
+                name="email"
+                type="email"
+                placeholder="e.g. owner@example.com"
+              />
+            </label>
+
             <div className={styles.formRow}>
               <label>
                 Unit code
                 <input
                   name="unitCode"
-                  placeholder="A-101"
+                  placeholder="101"
                   required
                 />
               </label>
@@ -140,6 +149,7 @@ export function UnitSetupForm({
                 <input
                   name="block"
                   placeholder="A"
+                  required
                 />
               </label>
 

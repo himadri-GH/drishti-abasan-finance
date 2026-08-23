@@ -7,6 +7,7 @@ export async function POST(request: Request) {
   const body = await request.json();
   const fullName = String(body.fullName ?? "").trim();
   const phone = String(body.phone ?? "").trim();
+  const email = String(body.email ?? "").trim();
   const unitCode = String(body.unitCode ?? "").trim().toUpperCase();
   const monthlyRate = Number(body.monthlyRate);
   if (!fullName || !phone || !unitCode || !Number.isFinite(monthlyRate) || monthlyRate <= 0) {
@@ -23,7 +24,7 @@ export async function POST(request: Request) {
       const ownerId = crypto.randomUUID();
       const unitId = crypto.randomUUID();
       const contractId = crypto.randomUUID();
-      await tx.insert(owners).values({ id: ownerId, societyId, fullName, phone });
+      await tx.insert(owners).values({id: ownerId, societyId, fullName, phone, email: email || null});
       await tx.insert(propertyUnits).values({ id: unitId, societyId, unitCode, unitType: String(body.unitType ?? "FLAT"), block: String(body.block ?? "").trim() || null, floorNumber: body.floorNumber ? Number(body.floorNumber) : null });
       await tx.insert(ownershipContracts).values({ id: contractId, societyId, contractCode: `CTR-${unitCode}-${new Date().getFullYear()}`, status: "ACTIVE", occupancyType: String(body.occupancyType ?? "SELF_OCCUPIED"), startDate: new Date().toISOString().slice(0, 10), monthlyRate, openingBalance: 0, ownerId, propertyUnitId: unitId });
       return { unitCode, fullName };
