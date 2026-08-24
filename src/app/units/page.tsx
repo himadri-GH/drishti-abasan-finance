@@ -49,7 +49,11 @@ export default async function UnitsPage() {
             className={styles.tableRow} 
             key={unit.unitCode}>
               <strong>
-                {unit.unitCode}
+                {unit.block
+                  ? `${unit.block}-${unit.unitCode}`
+                  : unit.unitCode
+                }
+
                   <small>{unit.block ?? ""} · {unit.unitType}
                   </small>
               </strong>
