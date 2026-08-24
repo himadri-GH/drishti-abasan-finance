@@ -10,6 +10,8 @@ export const dynamic = "force-dynamic";
 export default async function UnitsPage() {
   //const units = await getUnitDirectory();
   const [units, blockRows] = await Promise.all([getUnitDirectory(),db ? db.select().from(blocks) : Promise.resolve([]),]);
+  //console.log("BLOCK ROWS:", blockRows);
+
   return <main className={styles.subPage}>
     <Link className={styles.backLink} href="/">
     ← Back to overview
@@ -28,7 +30,8 @@ export default async function UnitsPage() {
         
         <UnitSetupForm
             buttonLabel="＋ Add unit"
-            blocks={blockRows.filter((block) => block.status === "ACTIVE").map((block) => block.name)}
+            //blocks={blockRows.filter((block) => block.status === "ACTIVE").map((block) => block.name)}
+          blocks={["A", "B"]}  
         />
       </div>
     </div>
