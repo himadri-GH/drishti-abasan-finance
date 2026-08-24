@@ -17,7 +17,7 @@ blocks?: string[];
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
-
+  const [unitType, setUnitType] = useState("FLAT");
 
 
   async function submit(event: FormEvent<HTMLFormElement>) {
@@ -169,13 +169,14 @@ blocks?: string[];
                 />
               </label>
 
-
-
               <label>
                 Unit type
                 <select
                   name="unitType"
-                  defaultValue="FLAT"
+                  value={unitType}
+                  onChange={(event) =>
+                    setUnitType(event.target.value)
+                  }
                 >
                   <option>FLAT</option>
                   <option>GARAGE</option>
@@ -184,8 +185,6 @@ blocks?: string[];
                 </select>
               </label>
             </div>
-
-
 
             <div className={styles.formRow}>
               <label>
@@ -210,20 +209,19 @@ blocks?: string[];
                 </select>
               </label>
 
+              {unitType === "FLAT" && (
+                <label>
+                  Floor
+                  <input
+                    name="floorNumber"
+                    type="number"
+                    min="0"
+                    placeholder="1"
+                  />
+                </label>
+              )}
 
-
-              <label>
-                Floor
-                <input
-                  name="floorNumber"
-                  type="number"
-                  min="0"
-                  placeholder="1"
-                />
-              </label>
             </div>
-
-
 
             <label>
               Monthly maintenance rate
