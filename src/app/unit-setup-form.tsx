@@ -1,24 +1,38 @@
-"use client";
+ "use client";
+
+
 
 import { FormEvent, useState } from "react";
 import styles from "./page.module.css";
 
+
+
 export function UnitSetupForm({
-  buttonLabel = "＋ Add first unit",
+buttonLabel = "＋ Add first unit",
+blocks = [],
 }: {
-  buttonLabel?: string;
+buttonLabel?: string;
+blocks?: string[];
 }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
+
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
+
+
     const form = event.currentTarget;
+
+
 
     setSaving(true);
     setMessage("");
+
+
 
     const response = await fetch("/api/setup/unit", {
       method: "POST",
@@ -30,26 +44,40 @@ export function UnitSetupForm({
       ),
     });
 
+
+
     const result = await response.json();
 
+
+
     setSaving(false);
+
+
 
     if (!response.ok) {
       setMessage(result.error ?? "Could not create unit.");
       return;
     }
 
+
+
     setMessage(
       `${result.unitCode} is ready for ${result.fullName}`
     );
 
+
+
     form.reset();
+
+
 
     window.setTimeout(() => {
       setOpen(false);
       window.location.reload();
     }, 800);
   }
+
+
 
   return (
     <>
@@ -59,6 +87,8 @@ export function UnitSetupForm({
       >
         {buttonLabel}
       </button>
+
+
 
       {open && (
         <div
@@ -81,6 +111,8 @@ export function UnitSetupForm({
                 <h3>Add owner and unit</h3>
               </div>
 
+
+
               <button
                 type="button"
                 className={styles.closeButton}
@@ -91,6 +123,8 @@ export function UnitSetupForm({
               </button>
             </div>
 
+
+
             <label>
               Owner full name
               <input
@@ -99,6 +133,8 @@ export function UnitSetupForm({
                 required
               />
             </label>
+
+
 
             <label>
               Phone number
@@ -110,6 +146,8 @@ export function UnitSetupForm({
               />
             </label>
 
+
+
             <label>
                Email address
               <input
@@ -118,6 +156,8 @@ export function UnitSetupForm({
                 placeholder="e.g. owner@example.com"
               />
             </label>
+
+
 
             <div className={styles.formRow}>
               <label>
@@ -128,6 +168,8 @@ export function UnitSetupForm({
                   required
                 />
               </label>
+
+
 
               <label>
                 Unit type
@@ -143,15 +185,32 @@ export function UnitSetupForm({
               </label>
             </div>
 
+
+
             <div className={styles.formRow}>
               <label>
                 Block
-                <input
+                <select
                   name="block"
-                  placeholder="A"
+                  defaultValue=""
                   required
-                />
+                >
+                  <option value="">
+                    Select block
+                  </option>
+
+                  {blocks.map((block) => (
+                    <option
+                      key={block}
+                      value={block}
+                    >
+                      {block}
+                    </option>
+                  ))}
+                </select>
               </label>
+
+
 
               <label>
                 Floor
@@ -163,6 +222,8 @@ export function UnitSetupForm({
                 />
               </label>
             </div>
+
+
 
             <label>
               Monthly maintenance rate
@@ -176,11 +237,15 @@ export function UnitSetupForm({
               />
             </label>
 
+
+
             {message && (
               <p className={styles.formMessage}>
                 {message}
               </p>
             )}
+
+
 
             <button
               className={styles.primaryButton}
