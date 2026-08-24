@@ -30,8 +30,8 @@ export default async function UnitsPage() {
         
         <UnitSetupForm
             buttonLabel="＋ Add unit"
-            //blocks={blockRows.filter((block) => block.status === "ACTIVE").map((block) => block.name)}
-          blocks={["A", "B"]}  
+            blocks={blockRows.filter((block) => block.status === "ACTIVE").map((block) => block.name)}
+          //blocks={["A", "B"]}  
         />
       </div>
     </div>
