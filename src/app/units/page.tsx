@@ -25,7 +25,7 @@ export default async function UnitsPage() {
         className={styles.successBadge}>{units.length} 
         records
         </span>
-        // <UnitSetupForm buttonLabel="＋ Add unit" />
+        
         <UnitSetupForm
             buttonLabel="＋ Add unit"
             blocks={blockRows.filter((block) => block.status === "ACTIVE").map((block) => block.name)}
