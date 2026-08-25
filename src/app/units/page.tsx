@@ -64,7 +64,10 @@ export default async function UnitsPage() {
                     {unit.balance > 0 ? `₹${unit.balance.toLocaleString("en-IN")} due` : `₹${Math.abs(unit.balance).toLocaleString("en-IN")} credit`}
               </span>
               <span className={styles.statusPill}>{unit.status}</span>
-              <UnitEditForm unit={unit} /></div>) : 
+              <UnitEditForm unit={unit} blocks={blockRows.filter((block) => block.status === "ACTIVE")
+                .map((block) => block.name)}
+              />
+</div>) : 
               <div className={styles.emptyPage}>No units yet. Use Add unit above when you are ready.
               </div>}
               </section>
