@@ -5,8 +5,12 @@ import { createPortal } from "react-dom";
 import styles from "./page.module.css";
 
 type Unit = { contractId: string; unitCode: string; unitType: string; block: string | null; floorNumber: number | null; ownerName: string; phone: string; email: string | null; monthlyRate: number };
-export function UnitEditForm({ unit }: { unit: Unit }) {
-  const [open, setOpen] = useState(false); const [message, setMessage] = useState(""); const [saving, setSaving] = useState(false);
+export function UnitEditForm({unit,blocks,}: {unit: Unit;blocks: string[];}) 
+{
+  const [open, setOpen] = useState(false); 
+  const [message, setMessage] = useState(""); 
+  const [saving, setSaving] = useState(false);
+  const [unitType, setUnitType] = useState(unit.unitType);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setSaving(true); setMessage("");
     const response = await fetch(`/api/units/${unit.contractId}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(event.currentTarget))) });
@@ -35,8 +39,13 @@ export function UnitEditForm({ unit }: { unit: Unit }) {
                 required />
         </label>
         <label>Unit type
-          <select 
-            name="unitType" defaultValue={unit.unitType}>
+          <select
+            name="unitType"
+            value={unitType}
+            onChange={(event) =>
+              setUnitType(event.target.value)
+            }
+          >
               <option>FLAT</option>
               <option>GARAGE</option>
               <option>SHOP</option>
@@ -45,15 +54,36 @@ export function UnitEditForm({ unit }: { unit: Unit }) {
         </label>
       </div>
       <div className={styles.formRow}>
-        <label>Block<input 
-        name="block" defaultValue={unit.block ?? ""} 
-                    />
+        <label>
+          Block
+            <select
+              name="block"
+              defaultValue={unit.block ?? ""}
+              required
+            >
+              {blocks.map((block) => (
+                <option
+                  key={block}
+                  value={block}
+                >
+                  {block}
+                </option>
+              ))}
+            </select>
         </label>
 
-        <label>Floor<input 
-        name="floorNumber" type="number" min="0" defaultValue={unit.floorNumber ?? ""} 
-                    />
-        </label>
+        {
+          unitType === "FLAT" && (
+          <label>
+            Floor
+            <input
+              name="floorNumber"
+              type="number"
+              min="0"
+              defaultValue={unit.floorNumber ?? ""}
+            />
+          </label>)
+        }
       </div>
         <label>Monthly rate<input name="monthlyRate" type="number" min="1" step="0.01" defaultValue={unit.monthlyRate} required /></label>
       {message && <p className={styles.formMessage}>{message}</p>}<button className={styles.primaryButton} disabled={saving}>{saving ? "Saving..." : "Save changes"}</button>
