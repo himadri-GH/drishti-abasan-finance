@@ -165,8 +165,13 @@ blocks?: string[];
                 <input
                   name="unitCode"
                   placeholder="101"
+                  pattern="[0-9]+"
+                  title="Enter only the unit number, e.g. 101. Do not include block names like A-101."
                   required
                 />
+                <small>
+                  Enter only the unit number. Block is selected separately.
+                </small>
               </label>
 
               <label>
