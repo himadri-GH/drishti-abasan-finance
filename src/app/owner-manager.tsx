@@ -152,7 +152,24 @@ export function OwnerManager({
       {owners.length ? (
         owners.map((owner) => (
           <div key={owner.id}>
+                      <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <strong>{owner.fullName}</strong>
+
+            <button
+              type="button"
+              onClick={() => {
+                console.log(owner);
+              }}
+            >
+              Edit
+            </button>
+          </div>
+
             <br />
             <small>
               {owner.phone}
