@@ -1,4 +1,6 @@
 "use client";
+import { FormEvent, useState } from "react";
+import styles from "./page.module.css";
 
 type Owner = {
   id: string;
@@ -14,8 +16,119 @@ export function OwnerManager({
 }: {
   owners: Owner[];
 }) {
+    const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    setSaving(true);
+    setMessage("");
+
+    const response = await fetch("/api/owners", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(
+        Object.fromEntries(new FormData(event.currentTarget))
+      ),
+    });
+
+    const result = await response.json();
+
+    setSaving(false);
+
+    if (!response.ok) {
+      setMessage(
+        result.error ?? "Could not create owner."
+      );
+      return;
+    }
+
+    window.location.reload();
+  }
   return (
-  <div>
+  <>
+    <button
+      className={styles.primaryButton}
+      onClick={() => setOpen(true)}
+    >
+      ＋ Add Owner
+    </button>
+
+    {open && (
+      <div
+        className={styles.modalBackdrop}
+        role="presentation"
+        onMouseDown={(event) =>
+          event.target === event.currentTarget &&
+          setOpen(false)
+        }
+      >
+        <form
+          className={styles.modal}
+          onSubmit={submit}
+        >
+          <div className={styles.modalHeading}>
+            <div>
+              <p className={styles.eyebrow}>
+                Owner registry
+              </p>
+              <h3>Add owner</h3>
+            </div>
+
+            <button
+              type="button"
+              className={styles.closeButton}
+              onClick={() => setOpen(false)}
+            >
+              ×
+            </button>
+          </div>
+
+          <label>
+            Full name
+            <input
+              name="fullName"
+              required
+            />
+          </label>
+
+          <label>
+            Phone
+            <input
+              name="phone"
+              required
+            />
+          </label>
+
+          <label>
+            Email
+            <input
+              name="email"
+              type="email"
+            />
+          </label>
+
+          {message && (
+            <p className={styles.formMessage}>
+              {message}
+            </p>
+          )}
+
+          <button
+            className={styles.primaryButton}
+            disabled={saving}
+          >
+            {saving ? "Saving..." : "Create owner"}
+          </button>
+        </form>
+      </div>
+    )}
+
+    <div>
     <span>
       <strong>{owners.length}</strong> owner records
     </span>
@@ -37,5 +150,6 @@ export function OwnerManager({
       )}
     </div>
   </div>
+  </>
 );
 }
