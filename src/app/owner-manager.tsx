@@ -105,10 +105,25 @@ export function OwnerManager({
           </label>
 
           <label>
+            Alternate Phone
+            <input
+              name="alternatePhone"
+            />
+          </label>
+
+          <label>
             Email
             <input
               name="email"
               type="email"
+            />
+          </label>
+
+          <label>
+            Permanent Address
+            <textarea
+              name="permanentAddress"
+              rows={3}
             />
           </label>
 

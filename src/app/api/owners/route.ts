@@ -31,7 +31,9 @@ export async function POST(request: Request) {
 
   const fullName = String(body.fullName ?? "").trim();
   const phone = String(body.phone ?? "").trim();
+  const alternatePhone = String(body.alternatePhone ?? "").trim();
   const email = String(body.email ?? "").trim();
+  const permanentAddress = String(body.permanentAddress ?? "").trim();
 
   if (!fullName || !phone) {
     return NextResponse.json(
@@ -57,7 +59,9 @@ export async function POST(request: Request) {
     societyId: society[0].id,
     fullName,
     phone,
+    alternatePhone: alternatePhone || null,
     email: email || null,
+    permanentAddress: permanentAddress || null,
   });
 
   return NextResponse.json(
