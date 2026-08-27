@@ -15,8 +15,27 @@ export function OwnerManager({
   owners: Owner[];
 }) {
   return (
-    <div>
+  <div>
+    <span>
       <strong>{owners.length}</strong> owner records
+    </span>
+
+    <div style={{ marginTop: "12px" }}>
+      {owners.length ? (
+        owners.map((owner) => (
+          <div key={owner.id}>
+            <strong>{owner.fullName}</strong>
+            <br />
+            <small>
+              {owner.phone}
+              {owner.email ? ` • ${owner.email}` : ""}
+            </small>
+          </div>
+        ))
+      ) : (
+        <p>No owners yet.</p>
+      )}
     </div>
-  );
+  </div>
+);
 }
