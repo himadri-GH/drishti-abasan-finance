@@ -19,6 +19,7 @@ export function OwnerManager({
     const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
+  const [editing, setEditing] = useState<Owner | null>(null);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -92,6 +93,7 @@ export function OwnerManager({
             Full name
             <input
               name="fullName"
+              defaultValue={editing?.fullName ?? ""}
               required
             />
           </label>
@@ -100,6 +102,7 @@ export function OwnerManager({
             Phone
             <input
               name="phone"
+              defaultValue={editing?.phone ?? ""}
               required
             />
           </label>
@@ -108,15 +111,17 @@ export function OwnerManager({
             Alternate Phone
             <input
               name="alternatePhone"
+              defaultValue={editing?.alternatePhone ?? ""}
             />
           </label>
 
           <label>
             Email
-            <input
-              name="email"
-              type="email"
-            />
+        <input
+          name="email"
+          type="email"
+          defaultValue={editing?.email ?? ""}
+        />
           </label>
 
           <label>
@@ -124,6 +129,7 @@ export function OwnerManager({
             <textarea
               name="permanentAddress"
               rows={3}
+              defaultValue={editing?.permanentAddress ?? ""}
             />
           </label>
 
@@ -163,7 +169,8 @@ export function OwnerManager({
             <button
               type="button"
               onClick={() => {
-                console.log(owner);
+                setEditing(owner);
+                setOpen(true);
               }}
             >
               Edit
