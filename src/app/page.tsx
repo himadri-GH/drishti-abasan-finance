@@ -27,7 +27,8 @@ export default async function Home() {
           <a className={styles.active} href="#overview"><span>◈</span> Overview</a>
           <a href="/collections"><span>◌</span> Collections <b>12</b></a>
           <a href="/expenses"><span>↗</span> Expenses</a>
-          <a href="/units"><span>⌂</span> Units & owners</a>
+          <a href="/units"><span>⌂</span> </a>
+          <a href="/owners"><span>⌂</span> </a>
           <a href="/reports"><span>▥</span> Reports</a>
           <a href="/contracts"><span>⌘</span> Contracts</a>
           <a href="/ledger"><span>≡</span> Full ledger</a>
