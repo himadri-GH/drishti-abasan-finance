@@ -190,6 +190,47 @@ export function OwnerManager({
             >
               Edit
             </button>
+                          
+            <button
+              type="button"
+              onClick={async () => {
+                if (
+                  !window.confirm(
+                    "Delete this owner?"
+                  )
+                )
+                  return;
+
+                const response = await fetch(
+                  "/api/owners",
+                  {
+                    method: "DELETE",
+                    headers: {
+                      "Content-Type":
+                        "application/json",
+                    },
+                    body: JSON.stringify({
+                      id: owner.id,
+                    }),
+                  }
+                );
+
+                const result =
+                  await response.json();
+
+                if (!response.ok) {
+                  alert(
+                    result.error ??
+                      "Could not delete owner."
+                  );
+                  return;
+                }
+
+                window.location.reload();
+              }}
+            >
+              Delete
+            </button>
           </div>
 
             <br />
