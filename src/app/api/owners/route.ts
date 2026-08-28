@@ -2,6 +2,7 @@ import { asc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { owners, societies } from "@/db/schema";
+import { ownershipContracts } from "@/db/schema";
 
 export async function GET() {
   if (!db) {
@@ -100,6 +101,46 @@ export async function PATCH(request: Request) {
         String(body.permanentAddress ?? "").trim() || null,
       updatedAt: new Date().toISOString(),
     })
+    .where(eq(owners.id, body.id));
+
+  return NextResponse.json({ ok: true });
+}
+
+export async function DELETE(request: Request) {
+  if (!db) {
+    return NextResponse.json(
+      { error: "Database is not configured." },
+      { status: 503 }
+    );
+  }
+
+  const body = await request.json();
+
+  if (!body.id) {
+    return NextResponse.json(
+      { error: "Owner ID is required." },
+      { status: 400 }
+    );
+  }
+
+  const linkedContract = await db
+    .select({ id: ownershipContracts.id })
+    .from(ownershipContracts)
+    .where(eq(ownershipContracts.ownerId, body.id))
+    .limit(1);
+
+  if (linkedContract[0]) {
+    return NextResponse.json(
+      {
+        error:
+          "This owner is linked to a contract and cannot be deleted.",
+      },
+      { status: 409 }
+    );
+  }
+
+  await db
+    .delete(owners)
     .where(eq(owners.id, body.id));
 
   return NextResponse.json({ ok: true });
