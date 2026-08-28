@@ -191,6 +191,7 @@ export function OwnerManager({
             <span>
               {owner.email ?? "-"}
             </span>
+            <span className={styles.adminRowActions}>
             <button
            className={styles.editButton}
           // className={styles.secondaryButton}
@@ -246,7 +247,7 @@ export function OwnerManager({
             >
               Delete
             </button>
-          
+          </span>
 
             <br />
            
