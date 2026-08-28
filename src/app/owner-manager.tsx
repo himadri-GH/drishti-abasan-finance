@@ -173,15 +173,21 @@ export function OwnerManager({
       {owners.length ? (
         owners.map((owner) => (
           <div key={owner.id}>
-                      <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-            }}
+          <div
+              style={{
+                display: "flex",
+                gap: "8px",
+                alignItems: "center",
+              }}
           >
-            <strong>{owner.fullName}</strong>
+            <strong
+              style={{ minWidth: "250px" }}
+            >
+              {owner.fullName}
+            </strong>
 
             <button
+            className={styles.editButton}
               type="button"
               onClick={() => {
                 setEditing(owner);
@@ -192,6 +198,7 @@ export function OwnerManager({
             </button>
                           
             <button
+              className={styles.voidButton}
               type="button"
               onClick={async () => {
                 if (
