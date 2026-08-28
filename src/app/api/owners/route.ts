@@ -68,4 +68,39 @@ export async function POST(request: Request) {
     { ok: true },
     { status: 201 }
   );
+  
+}
+export async function PATCH(request: Request) {
+  if (!db) {
+    return NextResponse.json(
+      { error: "Database is not configured." },
+      { status: 503 }
+    );
+  }
+
+  const body = await request.json();
+
+  if (!body.id) {
+    return NextResponse.json(
+      { error: "Owner ID is required." },
+      { status: 400 }
+    );
+  }
+
+  await db
+    .update(owners)
+    .set({
+      fullName: String(body.fullName ?? "").trim(),
+      phone: String(body.phone ?? "").trim(),
+      alternatePhone:
+        String(body.alternatePhone ?? "").trim() || null,
+      email:
+        String(body.email ?? "").trim() || null,
+      permanentAddress:
+        String(body.permanentAddress ?? "").trim() || null,
+      updatedAt: new Date().toISOString(),
+    })
+    .where(eq(owners.id, body.id));
+
+  return NextResponse.json({ ok: true });
 }

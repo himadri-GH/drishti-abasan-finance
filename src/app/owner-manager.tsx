@@ -27,15 +27,20 @@ export function OwnerManager({
     setSaving(true);
     setMessage("");
 
-    const response = await fetch("/api/owners", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(
-        Object.fromEntries(new FormData(event.currentTarget))
-      ),
-    });
+   const formData = Object.fromEntries(
+  new FormData(event.currentTarget)
+);
+
+  const response = await fetch("/api/owners", {
+    method: editing ? "PATCH" : "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      ...formData,
+      id: editing?.id,
+    }),
+  });
 
     const result = await response.json();
 
@@ -54,7 +59,10 @@ export function OwnerManager({
   <>
     <button
       className={styles.primaryButton}
-      onClick={() => setOpen(true)}
+      onClick={() => {
+        setEditing(null);
+        setOpen(true);
+      }}
     >
       ＋ Add Owner
     </button>
@@ -77,7 +85,9 @@ export function OwnerManager({
               <p className={styles.eyebrow}>
                 Owner registry
               </p>
-              <h3>Add owner</h3>
+              <h3>
+                {editing ? "Edit owner" : "Add owner"}
+              </h3>
             </div>
 
             <button
@@ -143,7 +153,12 @@ export function OwnerManager({
             className={styles.primaryButton}
             disabled={saving}
           >
-            {saving ? "Saving..." : "Create owner"}
+            {saving
+              ? "Saving..."
+              : editing
+              ? "Save changes"
+              : "Create owner"
+            }
           </button>
         </form>
       </div>
