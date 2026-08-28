@@ -169,7 +169,7 @@ export function OwnerManager({
       <strong>{owners.length}</strong> owner records
     </span>
 
-    <div className={styles.tableHeader}>
+    <div className={styles.ownerTableHeader}>
       <strong>Owner</strong>
       <strong>Phone</strong>
       <strong>Email</strong>
@@ -180,7 +180,7 @@ export function OwnerManager({
       {owners.length ? (
         owners.map((owner) => (
           <div
-            className={styles.tableRow}
+            className={styles.ownerTableRow}
             key={owner.id}
           >
           
