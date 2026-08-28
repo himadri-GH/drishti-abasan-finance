@@ -187,7 +187,10 @@ export function OwnerManager({
             <strong>
               {owner.fullName}
             </strong>
-
+            <span>{owner.phone}</span>
+            <span>
+              {owner.email ?? "-"}
+            </span>
             <button
             className={styles.editButton}
               type="button"
@@ -243,10 +246,7 @@ export function OwnerManager({
           
 
             <br />
-           <span>{owner.phone}</span>
-           <span>
-              {owner.email ?? "-"}
-           </span>
+           
         </div>
         ))
       ) : (
