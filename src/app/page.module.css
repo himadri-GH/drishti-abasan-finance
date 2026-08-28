@@ -12,7 +12,7 @@
               font: inherit;
               font-size: 11px;
               font-weight: 700;
-              width: auto;
+              width: 70px;
             }
 .voidButton {
               border: 0;
@@ -24,7 +24,7 @@
               font: inherit;
               font-size: 11px;
               font-weight: 700;
-              width: auto;
+              width: 70px;
             }
 .demoPanel { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 18px; padding: 23px; border: 1px solid rgba(213,102,71,.22); border-radius: 16px; background: rgba(248,223,215,.42); }.demoPanel h3 { margin: 0; color: #365b53; font-size: 15px; }.demoPanel p:not(.eyebrow) { margin: 7px 0 0; color: #8d827b; font-size: 11px; }
 .chargePanel { display: flex; align-items: center; justify-content: space-between; gap: 25px; margin-bottom: 18px; padding: 22px 24px; border: 1px solid rgba(255,255,255,.85); border-radius: 16px; background: rgba(255,255,255,.52); box-shadow: 0 16px 40px rgba(68,101,92,.08); }.chargePanel h3 { margin: 0; color: #365b53; font-size: 15px; }.chargePanel p:not(.eyebrow) { margin: 7px 0 0; color: #8ba19a; font-size: 10px; }.chargeForm { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 10px; }.chargeForm label { display: grid; gap: 6px; color: #54716a; font-size: 9px; font-weight: 700; }.chargeForm input { height: 36px; padding: 0 9px; border: 1px solid #cbded7; border-radius: 8px; color: #294b43; background: rgba(255,255,255,.75); font: inherit; }.chargeForm .primaryButton { height: 36px; padding: 0 11px; }.chargeForm .formMessage { width: 100%; margin: 0; }.chargePanel + .tablePanel { margin-top: 0; }
