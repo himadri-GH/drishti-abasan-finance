@@ -192,9 +192,9 @@ export function OwnerManager({
               {owner.email ?? "-"}
             </span>
             <button
-           //className={styles.editButton}
+           className={styles.editButton}
           // className={styles.secondaryButton}
-          className={styles.ownerActionButton}
+          //className={styles.ownerActionButton}
               type="button"
               onClick={() => {
                 setEditing(owner);
@@ -205,8 +205,8 @@ export function OwnerManager({
             </button>
                           
             <button
-              //className={styles.voidButton}
-              className={styles.ownerActionButton}
+              className={styles.voidButton}
+              //className={styles.ownerActionButton}
               type="button"
               onClick={async () => {
                 if (
