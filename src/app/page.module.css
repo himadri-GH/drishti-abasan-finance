@@ -201,3 +201,7 @@ a.secondary {
   padding: 0.1em 0.4em;
   border-radius: 6px;
 }
+.ownerActionButton {
+  padding: 0.35rem 0.75rem;
+  min-width: auto;
+}
