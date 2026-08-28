@@ -18,7 +18,7 @@ export default async function OwnersPage() {
   ← Back to overview
 </Link>
 
-    <div className={styles.subPageHeader}>
+   <div className={styles.subPageHeader}>
       <div>
         <p className={styles.eyebrow}>
           Owner registry
@@ -30,9 +30,11 @@ export default async function OwnersPage() {
           Manage property owners independently from units and contracts.
         </p>
       </div>
+  </div>
 
-      <OwnerManager owners={owners} />
-    </div>
+<section className={styles.tablePanel}>
+  <OwnerManager owners={owners} />
+</section>
   </main>
 );
 }
