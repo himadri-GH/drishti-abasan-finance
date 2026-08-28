@@ -169,20 +169,22 @@ export function OwnerManager({
       <strong>{owners.length}</strong> owner records
     </span>
 
+    <div className={styles.tableHeader}>
+      <strong>Owner</strong>
+      <strong>Phone</strong>
+      <strong>Email</strong>
+      <strong>Actions</strong>
+    </div>
+
     <div style={{ marginTop: "12px" }}>
       {owners.length ? (
         owners.map((owner) => (
-          <div key={owner.id}>
           <div
-              style={{
-                display: "flex",
-                gap: "8px",
-                alignItems: "center",
-              }}
+            className={styles.tableRow}
+            key={owner.id}
           >
-            <strong
-              style={{ minWidth: "250px" }}
-            >
+          
+            <strong>
               {owner.fullName}
             </strong>
 
@@ -238,14 +240,14 @@ export function OwnerManager({
             >
               Delete
             </button>
-          </div>
+          
 
             <br />
-            <small>
-              {owner.phone}
-              {owner.email ? ` • ${owner.email}` : ""}
-            </small>
-          </div>
+           <span>{owner.phone}</span>
+           <span>
+              {owner.email ?? "-"}
+           </span>
+        </div>
         ))
       ) : (
         <p>No owners yet.</p>
