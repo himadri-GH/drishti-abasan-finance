@@ -57,16 +57,7 @@ export function OwnerManager({
   }
   return (
   <>
-    <button
-      className={styles.primaryButton}
-      onClick={() => {
-        setEditing(null);
-        setOpen(true);
-      }}
-    >
-      ＋ Add Owner
-    </button>
-
+      
     {open && (
       <div
         className={styles.modalBackdrop}
@@ -165,10 +156,7 @@ export function OwnerManager({
     )}
 
     <div>
-    <span>
-      <strong>{owners.length}</strong> owner records
-    </span>
-
+    
     <div className={styles.ownerTableHeader}>
       <strong>Owner</strong>
       <strong>Phone</strong>
