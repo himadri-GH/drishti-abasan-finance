@@ -18,10 +18,10 @@ export default async function UnitsPage() {
     </Link>
     <div className={styles.subPageHeader}><div>
       <p className={styles.eyebrow}>Property register</p>
-      <h1>Units & owners</h1>
-      <p className={styles.pageIntro}>
-      Every home, parking space, and commercial unit with its active contract.
-      </p></div>
+      <h1>Units</h1>
+     <p className={styles.pageIntro}>
+       Every flat, garage, shop, and storage unit registered in the property.
+     </p></div>
       <div className={styles.pageActions}>
         <span 
         className={styles.successBadge}>{units.length} 
@@ -38,10 +38,9 @@ export default async function UnitsPage() {
     <section className={styles.tablePanel}>
       <div className={styles.tableHeader}>
         <strong>Unit</strong>
-        <strong>Owner</strong>
-        <strong>Contact</strong>
-        <strong>Balance</strong>
-        <strong>Status</strong>
+        <strong>Type</strong>
+        <strong>Block</strong>
+        <strong>Floor</strong>
         <strong />
       </div>
       {units.length ? units.map((unit) =>
@@ -57,17 +56,21 @@ export default async function UnitsPage() {
                   <small>{unit.block ?? ""} · {unit.unitType}
                   </small>
               </strong>
-              <span>{unit.ownerName}</span>
-              <span>{unit.phone}</span>
-              <span 
-                  className={unit.balance > 0 ? styles.expense : styles.income}>
-                    {unit.balance > 0 ? `₹${unit.balance.toLocaleString("en-IN")} due` : `₹${Math.abs(unit.balance).toLocaleString("en-IN")} credit`}
-              </span>
-              <span className={styles.statusPill}>{unit.status}</span>
-              <UnitEditForm unit={unit} blocks={blockRows.filter((block) => block.status === "ACTIVE")
-                .map((block) => block.name)}
-              />
-</div>) : 
+              
+             
+              <span>{unit.unitType}</span>
+
+              <span>{unit.block ?? "-"}</span>
+
+              <span>{unit.floorNumber ?? "-"}</span>
+
+             <UnitEditForm
+                unit={unit}
+                blocks={blockRows
+                  .filter((block) => block.status === "ACTIVE")
+                  .map((block) => block.name)}
+             />
+            </div>) : 
               <div className={styles.emptyPage}>No units yet. Use Add unit above when you are ready.
               </div>}
               </section>

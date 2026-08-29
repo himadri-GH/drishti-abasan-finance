@@ -15,3 +15,18 @@ export async function getLedgerManagement() {
   const [payments, expenses] = await Promise.all([db.select({ id: paymentLedger.id, receiptNo: paymentLedger.receiptNo, payerName: paymentLedger.payerName, amount: paymentLedger.amountReceived, mode: paymentLedger.paymentMode, notes: paymentLedger.notes, status: paymentLedger.status }).from(paymentLedger).orderBy(desc(paymentLedger.paymentDate)), db.select({ id: expenseLedger.id, voucherNo: expenseLedger.voucherNo, paidTo: expenseLedger.paidTo, amount: expenseLedger.amount, category: expenseLedger.category, mode: expenseLedger.paymentMode, description: expenseLedger.description, status: expenseLedger.status }).from(expenseLedger).orderBy(desc(expenseLedger.expenseDate))]);
   return { payments, expenses };
 }
+export async function getOwners() {
+  if (!db) return [];
+
+  return db
+    .select({
+      id: owners.id,
+      fullName: owners.fullName,
+      phone: owners.phone,
+      alternatePhone: owners.alternatePhone,
+      email: owners.email,
+      permanentAddress: owners.permanentAddress,
+    })
+    .from(owners)
+    .orderBy(asc(owners.fullName));
+}
