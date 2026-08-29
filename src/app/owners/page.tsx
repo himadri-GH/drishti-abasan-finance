@@ -30,11 +30,14 @@ export default async function OwnersPage() {
           Manage property owners independently from units and contracts.
         </p>
       </div>
-      <div className={styles.pageActions}>
+      <div
+        className={styles.pageActions}
+        style={{ alignSelf: "flex-start" }}
+      >
         <span className={styles.successBadge}>
-         {owners.length} records
+          {owners.length} records
         </span>
-      </div> 
+      </div>
   </div>
 
 <section className={styles.tablePanel}>
