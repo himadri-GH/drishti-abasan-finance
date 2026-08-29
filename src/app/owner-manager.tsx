@@ -57,7 +57,17 @@ export function OwnerManager({
   }
   return (
   <>
-      
+     <div className={styles.pageActions}>
+      <button
+        className={styles.primaryButton}
+            onClick={() => {
+              setEditing(null);
+              setOpen(true);
+            }}
+        >
+          + Add Owner
+        </button> 
+      </div>
     {open && (
       <div
         className={styles.modalBackdrop}
