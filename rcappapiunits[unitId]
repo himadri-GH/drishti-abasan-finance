@@ -1,0 +1,21 @@
+*   [33m7453987[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Merge pull request #7 from himadri-GH/feature/owners-page
+[31m|[m[32m\[m  
+[31m|[m * [33m1d2e5a7[m[33m ([m[1;31morigin/feature/owners-page[m[33m, [m[1;32mfeature/owners-page[m[33m)[m Restrict unit deletion to unassigned units
+[31m|[m * [33m2b16c14[m Add delete unit action
+[31m|[m * [33mac6a4ed[m Complete unit module decoupling
+[31m|[m * [33m33c19ca[m Remove balance calculation from unit directory
+[31m|[m * [33mf7cd6aa[m Convert units page to unit-only directory
+[31m|[m * [33mffc270f[m Decouple unit edit form
+[31m|[m * [33mbe6a76a[m Decouple unit creation from owner and contract
+[31m|[m * [33m05f0675[m Remove owner fields from unit setup form
+[31m|[m * [33m57b6d8e[m Restore working add owner button
+[31m|[m * [33md3f06db[m Create owners action toolbar
+[31m|[m * [33m5831b4d[m Align owner actions horizontally
+[31m|[m * [33m3d9de89[m Restore add owner button
+[31m|[m * [33ma10ee79[m Improve owners page action layout
+[31m|[m * [33m1036a8c[m Improve owners page header layout
+[31m|[m * [33m4cfa51a[m Align owner record badge in header
+[31m|[m * [33m0c99dfa[m Remove duplicate owner record badges
+[31m|[m * [33m73712de[m Move owner record count to page header
+[31m|[m * [33mb39a8d0[m Modify 2  owners specific table layout
+[31m|[m * [33m82f8029[m Modify owners specific table layout
