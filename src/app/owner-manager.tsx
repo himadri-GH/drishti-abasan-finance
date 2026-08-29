@@ -57,23 +57,7 @@ export function OwnerManager({
   }
   return (
   <>
-    <div
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        marginLeft: "12px",
-      }}
-    >
-      <button
-        className={styles.primaryButton}
-            onClick={() => {
-              setEditing(null);
-              setOpen(true);
-            }}
-        >
-          + Add Owner
-        </button> 
-      </div>
+   
     {open && (
       <div
         className={styles.modalBackdrop}

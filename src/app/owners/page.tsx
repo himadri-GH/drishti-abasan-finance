@@ -33,13 +33,29 @@ export default async function OwnersPage() {
       
   </div>
 <div
-        className={styles.pageActions}
-        style={{ alignSelf: "flex-start" }}
-      >
-        <span className={styles.successBadge}>
-          {owners.length} records
-        </span>
-      </div>
+  className={styles.pageActions}
+  style={{ alignSelf: "flex-start" }}
+>
+  <span className={styles.successBadge}>
+    {owners.length} records
+  </span>
+</div>
+<div
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    marginBottom: "16px",
+  }}
+>
+  <span className={styles.successBadge}>
+    {owners.length} records
+  </span>
+
+  <button className={styles.primaryButton}>
+    + Add Owner
+  </button>
+</div>
 <section className={styles.tablePanel}>
    <OwnerManager owners={owners} />
 </section>
