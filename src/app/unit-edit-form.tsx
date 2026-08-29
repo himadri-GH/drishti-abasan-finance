@@ -10,6 +10,7 @@ type Unit = {
   unitType: string;
   block: string | null;
   floorNumber: number | null;
+  contractId?: string | null;
 };
 export function UnitEditForm({unit,blocks,}: {unit: Unit;blocks: string[];}) 
 {
@@ -100,31 +101,36 @@ export function UnitEditForm({unit,blocks,}: {unit: Unit;blocks: string[];})
         Edit
       </button>
 
-      <button
-        className={styles.voidButton}
-        type="button"
-        onClick={async () => {
-          if (!window.confirm("Delete this unit?")) {
-            return;
-          }
-
-          const response = await fetch(
-            `/api/units/${unit.unitId}`,
-            {
-              method: "DELETE",
+      {!unit.contractId && 
+      (
+        <button
+          className={styles.voidButton}
+          type="button"
+          onClick={async () => {
+            if (!window.confirm("Delete this unit?")) {
+              return;
             }
-          );
 
-          if (!response.ok) {
-            alert("Could not delete unit.");
-            return;
-          }
+            const response = await fetch(
+              `/api/units/${unit.unitId}`,
+              {
+                method: "DELETE",
+              }
+            );
 
-          window.location.reload();
-        }}
-      >
-        Delete
-      </button>
+            if (!response.ok) {
+              const result = await response.json();
+              alert(result.error);
+              return;
+            }
+
+            window.location.reload();
+          }}
+        >
+          Delete
+        </button>
+     )
+    }
     </span>
 
     {typeof document !== "undefined" &&
