@@ -29,12 +29,12 @@ export default async function OwnersPage() {
         <p className={styles.pageIntro}>
           Manage property owners independently from units and contracts.
         </p>
-       <div className={styles.pageActions}>
+      </div>
+      <div className={styles.pageActions}>
         <span className={styles.successBadge}>
-          {owners.length} records
+         {owners.length} records
         </span>
       </div> 
-      </div>
   </div>
 
 <section className={styles.tablePanel}>
