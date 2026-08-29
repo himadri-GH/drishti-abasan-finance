@@ -93,26 +93,7 @@ export async function getUnitDirectory() {
       status: ownershipContracts.status,
       monthlyRate: ownershipContracts.monthlyRate,
 
-      balance: sql<number>`
-        coalesce(
-          ${ownershipContracts.openingBalance}
-          + (
-            select coalesce(sum(mc.amount_billed), 0)
-            from monthly_charges mc
-            where mc.contract_id = ${ownershipContracts.id}
-          )
-          - (
-            select coalesce(sum(pa.amount_applied), 0)
-            from payment_allocations pa
-            where pa.charge_id in (
-              select mc2.id
-              from monthly_charges mc2
-              where mc2.contract_id = ${ownershipContracts.id}
-            )
-            and pa.status = 'ACTIVE'
-          ),
-        0
-      `,
+      balance: sql<number>`0`,
     })
     .from(propertyUnits)
     .leftJoin(
