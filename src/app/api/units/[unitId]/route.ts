@@ -55,3 +55,33 @@ export async function PATCH(
     );
   }
 }
+export async function DELETE(
+  request: Request,
+  context: { params: Promise<{ unitId: string }> }
+) {
+  if (!db) {
+    return NextResponse.json(
+      { error: "Database is not configured." },
+      { status: 503 }
+    );
+  }
+
+  const { unitId } = await context.params;
+
+  try {
+    await db
+      .delete(propertyUnits)
+      .where(eq(propertyUnits.id, unitId));
+
+    return NextResponse.json({
+      ok: true,
+    });
+  } catch {
+    return NextResponse.json(
+      {
+        error: "Could not delete unit.",
+      },
+      { status: 409 }
+    );
+  }
+}

@@ -90,8 +90,45 @@ export function UnitEditForm({unit,blocks,}: {unit: Unit;blocks: string[];})
       {message && <p className={styles.formMessage}>{message}</p>}<button className={styles.primaryButton} disabled={saving}>{saving ? "Saving..." : "Save changes"}</button>
     </form></div>;
 
-  return <>
-    <button className={styles.editButton} onClick={() => setOpen(true)}>Edit</button>
-    {typeof document !== "undefined" && createPortal(modal, document.body)}
-  </>;
+ return (
+  <>
+    <span className={styles.adminRowActions}>
+      <button
+        className={styles.editButton}
+        onClick={() => setOpen(true)}
+      >
+        Edit
+      </button>
+
+      <button
+        className={styles.voidButton}
+        type="button"
+        onClick={async () => {
+          if (!window.confirm("Delete this unit?")) {
+            return;
+          }
+
+          const response = await fetch(
+            `/api/units/${unit.unitId}`,
+            {
+              method: "DELETE",
+            }
+          );
+
+          if (!response.ok) {
+            alert("Could not delete unit.");
+            return;
+          }
+
+          window.location.reload();
+        }}
+      >
+        Delete
+      </button>
+    </span>
+
+    {typeof document !== "undefined" &&
+      createPortal(modal, document.body)}
+  </>
+);
 }
