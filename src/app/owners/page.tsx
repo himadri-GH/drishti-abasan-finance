@@ -32,14 +32,7 @@ export default async function OwnersPage() {
       </div>
       
   </div>
-<div
-  className={styles.pageActions}
-  style={{ alignSelf: "flex-start" }}
->
-  <span className={styles.successBadge}>
-    {owners.length} records
-  </span>
-</div>
+
 <div
   style={{
     display: "flex",
