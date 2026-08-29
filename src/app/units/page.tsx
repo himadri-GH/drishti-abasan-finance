@@ -19,9 +19,9 @@ export default async function UnitsPage() {
     <div className={styles.subPageHeader}><div>
       <p className={styles.eyebrow}>Property register</p>
       <h1>Units</h1>
-      <p className={styles.pageIntro}>
-      Every home, parking space, and commercial unit with its active contract.
-      </p></div>
+     <p className={styles.pageIntro}>
+       Every flat, garage, shop, and storage unit registered in the property.
+     </p></div>
       <div className={styles.pageActions}>
         <span 
         className={styles.successBadge}>{units.length} 
@@ -64,17 +64,12 @@ export default async function UnitsPage() {
 
               <span>{unit.floorNumber ?? "-"}</span>
 
-              {unit.contractId ? 
-              (
-                <UnitEditForm
-                  unit={unit}
-                  blocks={blockRows
-                    .filter((block) => block.status === "ACTIVE")
-                    .map((block) => block.name)}
-                />
-              ) 
-              : (<span>-</span>)
-              }
+             <UnitEditForm
+                unit={unit}
+                blocks={blockRows
+                  .filter((block) => block.status === "ACTIVE")
+                  .map((block) => block.name)}
+             />
             </div>) : 
               <div className={styles.emptyPage}>No units yet. Use Add unit above when you are ready.
               </div>}
