@@ -38,17 +38,7 @@ export default async function OwnersPage() {
   </div>
 
 <section className={styles.tablePanel}>
-  <div className={styles.pageActions}>
-  <span className={styles.successBadge}>
-    {owners.length} records
-  </span>
-</div>
-<div className={styles.pageActions}>
-  <span className={styles.successBadge}>
-    {owners.length} records
-  </span>
-</div>
-<OwnerManager owners={owners} />
+   <OwnerManager owners={owners} />
 </section>
   </main>
 );
