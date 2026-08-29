@@ -4,7 +4,13 @@ import { FormEvent, useState } from "react";
 import { createPortal } from "react-dom";
 import styles from "./page.module.css";
 
-type Unit = { contractId: string; unitCode: string; unitType: string; block: string | null; floorNumber: number | null; ownerName: string; phone: string; email: string | null; monthlyRate: number };
+type Unit = {
+  unitId: string;
+  unitCode: string;
+  unitType: string;
+  block: string | null;
+  floorNumber: number | null;
+};
 export function UnitEditForm({unit,blocks,}: {unit: Unit;blocks: string[];}) 
 {
   const [open, setOpen] = useState(false); 
@@ -13,22 +19,17 @@ export function UnitEditForm({unit,blocks,}: {unit: Unit;blocks: string[];})
   const [unitType, setUnitType] = useState(unit.unitType);
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setSaving(true); setMessage("");
-    const response = await fetch(`/api/units/${unit.contractId}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(Object.fromEntries(new FormData(event.currentTarget))) });
+    const response = await fetch(`/api/units/${unit.unitId}`, 
+      { method: "PATCH", headers: { "Content-Type": "application/json" }, 
+      body: JSON.stringify(Object.fromEntries(new FormData(event.currentTarget))) 
+      });
     const result = await response.json(); setSaving(false);
     if (!response.ok) { setMessage(result.error ?? "Could not update unit."); return; }
     setOpen(false); window.location.reload();
   }
   const modal = open && <div className={styles.modalBackdrop} role="presentation" onMouseDown={(event) => event.target === event.currentTarget && setOpen(false)}><form className={styles.modal} onSubmit={submit}>
-      <div className={styles.modalHeading}><div><p className={styles.eyebrow}>Unit record</p><h3>Edit owner and unit</h3></div><button type="button" className={styles.closeButton} onClick={() => setOpen(false)} aria-label="Close">×</button></div>
-      <label>Owner full name
-        <input name="fullName" defaultValue={unit.ownerName} required /></label>
-        <label>Phone number<input name="phone" defaultValue={unit.phone} required /></label>
-        <label> Email address <input
-                name="email"
-                type="email"
-                defaultValue={unit.email ?? ""}
-                              />
-        </label>
+      <div className={styles.modalHeading}><div><p className={styles.eyebrow}>Unit record</p><h3>Edit unit</h3></div><button type="button" className={styles.closeButton} onClick={() => setOpen(false)} aria-label="Close">×</button></div>
+      
 
       <div className={styles.formRow}>
         <label>Unit code <input
@@ -85,7 +86,7 @@ export function UnitEditForm({unit,blocks,}: {unit: Unit;blocks: string[];})
           </label>)
         }
       </div>
-        <label>Monthly rate<input name="monthlyRate" type="number" min="1" step="0.01" defaultValue={unit.monthlyRate} required /></label>
+       
       {message && <p className={styles.formMessage}>{message}</p>}<button className={styles.primaryButton} disabled={saving}>{saving ? "Saving..." : "Save changes"}</button>
     </form></div>;
 
