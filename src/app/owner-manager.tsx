@@ -57,7 +57,13 @@ export function OwnerManager({
   }
   return (
   <>
-     <div className={styles.pageActions}>
+    <div
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        marginLeft: "12px",
+      }}
+    >
       <button
         className={styles.primaryButton}
             onClick={() => {
