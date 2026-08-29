@@ -61,8 +61,8 @@ blocks?: string[];
 
 
 
-    setMessage(
-      `${result.unitCode} is ready for ${result.fullName}`
+   setMessage(
+        `${result.unitCode} created successfully`
     );
 
 
@@ -108,7 +108,7 @@ blocks?: string[];
                 <p className={styles.eyebrow}>
                   Building setup
                 </p>
-                <h3>Add owner and unit</h3>
+                <h3>Add unit</h3>
               </div>
 
 
@@ -124,39 +124,7 @@ blocks?: string[];
             </div>
 
 
-
-            <label>
-              Owner full name
-              <input
-                name="fullName"
-                placeholder="e.g. Riya Sen"
-                required
-              />
-            </label>
-
-
-
-            <label>
-              Phone number
-              <input
-                name="phone"
-                type="tel"
-                placeholder="e.g. 9876543210"
-                required
-              />
-            </label>
-
-
-
-            <label>
-               Email address
-              <input
-                name="email"
-                type="email"
-                placeholder="e.g. owner@example.com"
-              />
-            </label>
-
+          
 
 
             <div className={styles.formRow}>
@@ -228,17 +196,7 @@ blocks?: string[];
 
             </div>
 
-            <label>
-              Monthly maintenance rate
-              <input
-                name="monthlyRate"
-                type="number"
-                min="1"
-                step="0.01"
-                placeholder="1500"
-                required
-              />
-            </label>
+           
 
 
 
@@ -256,7 +214,7 @@ blocks?: string[];
             >
               {saving
                 ? "Saving..."
-                : "Create owner and unit"}
+                : "Create unit"}
             </button>
           </form>
         </div>
