@@ -28,6 +28,7 @@ export function ContractManager
 const [open, setOpen] = useState(false);
 const [editing, setEditing] = useState<Contract | null>(null); 
 const [selectedBlock, setSelectedBlock] = useState("");
+const [selectedUnit, setSelectedUnit] = useState("");
 
 const blocks = 
 [
@@ -48,7 +49,15 @@ const filteredUnits =
         (unit) => unit.block === selectedBlock
       );
 
+const selectedUnitLabel =
+  filteredUnits.find(
+    (unit) => unit.id === selectedUnit
+  )?.label ?? "";
 
+const contractCode =
+  selectedUnitLabel
+    ? `CTR-${selectedUnitLabel}-${new Date().getFullYear()}`
+    : "";
 
 const [message, setMessage] = useState("");
   async function save(event: FormEvent<HTMLFormElement>) 
@@ -78,11 +87,12 @@ const [message, setMessage] = useState("");
                   }
                ); window.location.reload(); 
   }
-  const start = (contract?: Contract) =>
+ const start = (contract?: Contract) =>
   {
     setEditing(contract ?? null);
     setMessage("");
     setSelectedBlock("");
+    setSelectedUnit("");
     setOpen(true);
   };
   return <>
@@ -145,6 +155,11 @@ const [message, setMessage] = useState("");
                 name="propertyUnitId"
                 required
                 disabled={!selectedBlock}
+                value={selectedUnit}
+                onChange=
+                {(event) =>
+                  setSelectedUnit(event.target.value)
+                }
               >
                 <option value="">
                   Choose unit
@@ -160,8 +175,14 @@ const [message, setMessage] = useState("");
                 ))}
               </select>
             </label>
-            <label>
-              Contract code<input name="contractCode" placeholder="CTR-A101-2026" required />
+           <label>
+              Contract code
+              <input
+                name="contractCode"
+                value={contractCode}
+                readOnly
+                required
+              />
             </label></>
         }<div className={styles.formRow}><label>Start date<input name="startDate" type="date" defaultValue={editing?.startDate ?? "2026-08-01"} required /></label><label>End date<input name="endDate" type="date" defaultValue={editing?.endDate ?? ""} /></label></div><div className={styles.formRow}><label>Monthly rate<input name="monthlyRate" type="number" min="1" defaultValue={editing?.rate ?? ""} required /></label><label>Opening balance<input name="openingBalance" type="number" defaultValue={editing?.opening ?? 0} /></label></div><label>Occupancy<select name="occupancyType" defaultValue={editing?.occupancy ?? "SELF_OCCUPIED"}><option>SELF_OCCUPIED</option><option>TENANT</option><option>VACANT</option></select></label>{editing && <label>Status<select name="status" defaultValue={editing.status}><option>ACTIVE</option><option>FROZEN</option><option>TRANSFERRED</option><option>VACATED</option></select></label>}{message && <p className={styles.formMessage}>{message}</p>
         }
