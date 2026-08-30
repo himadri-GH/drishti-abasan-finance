@@ -11,6 +11,12 @@ export default async function ContractsPage()
     const [ownerRows, unitRows] = db ? await Promise.all
     ([db.select({ id: owners.id, name: owners.fullName }).from(owners), 
         db.select({ id: propertyUnits.id, code: propertyUnits.unitCode, block: propertyUnits.block, }).from(propertyUnits)]) : [[], []];
+        const assignedUnitIds = new Set(
+                                            contracts
+                                                .filter((contract) => contract.status === "ACTIVE")
+                                                .map((contract) => contract.unitId)
+                                        );
+        const availableUnits = unitRows.filter((row) => !assignedUnitIds.has(row.id));
          return( 
          <main 
             className={styles.subPage}>
@@ -27,10 +33,10 @@ export default async function ContractsPage()
                             id: row.id,
                             label: row.name,
                         }))}
-                        units={unitRows.map((row) => ({
-                            id: row.id,
-                            label: `${row.block}-${row.code}`,
-                            block: row.block,
+                        units={availableUnits.map((row) => ({
+                                id: row.id,
+                                label: `${row.block}-${row.code}`,
+                                block: row.block,
                         }))}
                         />
                 </div>
