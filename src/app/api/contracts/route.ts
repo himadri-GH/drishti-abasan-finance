@@ -2,6 +2,52 @@ import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { owners, ownershipContracts, propertyUnits, societies } from "@/db/schema";
-export async function POST(request: Request) { if (!db) return NextResponse.json({ error: "Database is not configured." }, { status: 503 }); const b = await request.json(); const society = await db.select({ id: societies.id }).from(societies).limit(1); const required = [b.ownerId, b.propertyUnitId, b.contractCode, b.startDate, b.monthlyRate]; if (!society[0] || required.some((value) => !value)) return NextResponse.json({ error: "Complete the contract fields first." }, { status: 400 }); const owner = await db.select({ id: owners.id }).from(owners).where(eq(owners.id, String(b.ownerId))).limit(1); const unit = await db.select({ id: propertyUnits.id }).from(propertyUnits).where(eq(propertyUnits.id, String(b.propertyUnitId))).limit(1); if (!owner[0] || !unit[0]) return NextResponse.json({ error: "Choose a valid owner and unit." }, { status: 400 }); await db.insert(ownershipContracts).values({ id: crypto.randomUUID(), societyId: society[0].id, contractCode: String(b.contractCode).trim(), status: "ACTIVE", occupancyType: String(b.occupancyType ?? "SELF_OCCUPIED"), startDate: String(b.startDate), endDate: b.endDate || null, monthlyRate: Number(b.monthlyRate), openingBalance: Number(b.openingBalance ?? 0), ownerId: owner[0].id, propertyUnitId: unit[0].id }); return NextResponse.json({ ok: true }, { status: 201 }); }
-export async function PATCH(request: Request) { if (!db) return NextResponse.json({ error: "Database is not configured." }, { status: 503 }); const b = await request.json(); await db.update(ownershipContracts).set({ status: String(b.status), occupancyType: String(b.occupancyType), startDate: String(b.startDate), endDate: b.endDate || null, monthlyRate: Number(b.monthlyRate), openingBalance: Number(b.openingBalance ?? 0), updatedAt: new Date().toISOString() }).where(eq(ownershipContracts.id, String(b.id))); return NextResponse.json({ ok: true }); }
-export async function DELETE(request: Request) { if (!db) return NextResponse.json({ error: "Database is not configured." }, { status: 503 }); const b = await request.json(); await db.update(ownershipContracts).set({ status: "VACATED", endDate: new Date().toISOString().slice(0, 10), updatedAt: new Date().toISOString() }).where(eq(ownershipContracts.id, String(b.id))); return NextResponse.json({ ok: true }); }
+export async function POST(request: Request) 
+{ if (!db) return NextResponse.json({ error: "Database is not configured." }, { status: 503 }); const b = await request.json(); const society = await db.select({ id: societies.id }).from(societies).limit(1); const required = [b.ownerId, b.propertyUnitId, b.contractCode, b.startDate, b.monthlyRate]; if (!society[0] || required.some((value) => !value)) return NextResponse.json({ error: "Complete the contract fields first." }, { status: 400 }); const owner = await db.select({ id: owners.id }).from(owners).where(eq(owners.id, String(b.ownerId))).limit(1); const unit = await db.select({ id: propertyUnits.id }).from(propertyUnits).where(eq(propertyUnits.id, String(b.propertyUnitId))).limit(1);
+
+if (!owner[0] || !unit[0]) 
+    return NextResponse.json({ error: "Choose a valid owner and unit." },
+ { status: 400 }
+); 
+
+    const activeContract = await db
+    .select({ id: ownershipContracts.id })
+    .from(ownershipContracts)
+    .where(
+        eq(
+        ownershipContracts.propertyUnitId,
+        String(b.propertyUnitId)
+        )
+    )
+    .limit(1);
+
+    if (activeContract[0]) {
+    return NextResponse.json
+    (
+        {
+        error:
+            "This unit already has a contract.",
+        },
+        { status: 400 }
+    );
+}
+
+await db.insert(ownershipContracts)
+.values(
+            { id: crypto.randomUUID(), 
+            societyId: society[0].id, 
+            contractCode: String(b.contractCode).trim(), 
+            status: "ACTIVE", 
+            occupancyType: String(b.occupancyType ?? "SELF_OCCUPIED"), 
+            startDate: String(b.startDate), 
+            endDate: b.endDate || null, 
+            monthlyRate: Number(b.monthlyRate), 
+            openingBalance: Number(b.openingBalance ?? 0), 
+            ownerId: owner[0].id, propertyUnitId: unit[0].id 
+            }
+        ); 
+return NextResponse.json({ ok: true }, { status: 201 }); }
+export async function PATCH(request: Request) 
+{ if (!db) return NextResponse.json({ error: "Database is not configured." }, { status: 503 }); const b = await request.json(); await db.update(ownershipContracts).set({ status: String(b.status), occupancyType: String(b.occupancyType), startDate: String(b.startDate), endDate: b.endDate || null, monthlyRate: Number(b.monthlyRate), openingBalance: Number(b.openingBalance ?? 0), updatedAt: new Date().toISOString() }).where(eq(ownershipContracts.id, String(b.id))); return NextResponse.json({ ok: true }); }
+export async function DELETE(request: Request)
+ { if (!db) return NextResponse.json({ error: "Database is not configured." }, { status: 503 }); const b = await request.json(); await db.update(ownershipContracts).set({ status: "VACATED", endDate: new Date().toISOString().slice(0, 10), updatedAt: new Date().toISOString() }).where(eq(ownershipContracts.id, String(b.id))); return NextResponse.json({ ok: true }); }
