@@ -189,5 +189,24 @@ const [message, setMessage] = useState("");
   <button className={styles.primaryButton}>
   {editing ? "Save changes" : "Create contract"}
   </button>
-  </form></div>}<div className={styles.contractList}>{contracts.map((contract) => <div className={styles.contractRow} key={contract.id}><span><strong>{contract.code}</strong><small>{contract.unitCode} · {contract.ownerName} · ₹{contract.rate.toLocaleString("en-IN")}/month</small></span><span className={styles.adminRowActions}><button className={styles.editButton} onClick={() => start(contract)}>Edit</button>{contract.status === "ACTIVE" && <button className={styles.voidButton} onClick={() => archive(contract.id)}>Close</button>}</span></div>)}</div></>;
+  </form></div>}
+  <div className={styles.contractList}>
+    {contracts.map((contract) => 
+    <div className={styles.contractRow} key={contract.id}>
+      <span>
+        <strong>{contract.code}</strong>
+        <small>
+          {contract.unitCode} ·
+           {contract.ownerName} · 
+           ₹{contract.rate.toLocaleString("en-IN")}/month</small>
+      </span>
+      <span className={styles.adminRowActions}>
+        <button className={styles.editButton} onClick={() => start(contract)}>Edit</button>
+        {contract.status === "ACTIVE" && <button className={styles.voidButton} 
+          onClick={() => archive(contract.id)}>
+            Close
+        </button>
+        }
+      </span>
+    </div>)}</div></>;
 }

@@ -40,23 +40,7 @@ export default async function ContractsPage()
                         }))}
                         />
                 </div>
-                <section className={styles.contractListPage}>
-                    {contracts.length ? contracts.map((contract) => 
-                    <div className={styles.contractCard} key={contract.id}>
-                        <div>
-                            <p className={styles.eyebrow}>{contract.status}</p>
-                            <h3>{contract.code}</h3>
-                            <span>{contract.unitCode} · {contract.ownerName}</span>
-                        </div>
-                    <strong>₹{contract.rate.toLocaleString("en-IN")}
-                        <small>monthly rate</small>
-                        </strong>
-                    </div>
-                    ) : 
-                    <div className={styles.emptyPage}>No contracts yet. Add owners and units first, then create the first contract.
-                    </div>
-                    }
-                    </section>
+                
         </main>
          );
 }
