@@ -1,9 +1,30 @@
 "use client";
 import { FormEvent, useState } from "react";
 import styles from "./page.module.css";
-type Contract = { id: string; code: string; status: string; occupancy: string; startDate: string; endDate: string | null; rate: number; opening: number; ownerId: string; ownerName: string; unitId: string; unitCode: string };
-type Choice = { id: string; label: string };
-export function ContractManager({ contracts, owners, units }: { contracts: Contract[]; owners: Choice[]; units: Choice[] }) {
+type Contract = 
+              { 
+                id: string; 
+                code: string; 
+                status: string; 
+                occupancy: string; 
+                startDate: string; 
+                endDate: string | null; 
+                rate: number; opening: number; 
+                ownerId: string; 
+                ownerName: string; 
+                unitId: string; 
+                unitCode: string ;
+              };
+type Choice = { id: string; label: string;block?: string | null; };
+export function ContractManager
+              (
+                { contracts, owners, units }: 
+                  { contracts: Contract[]; 
+                    owners: Choice[]; 
+                    units: Choice[] 
+                  }
+              ) 
+{
   const [open, setOpen] = useState(false); const [editing, setEditing] = useState<Contract | null>(null); const [message, setMessage] = useState("");
   async function save(event: FormEvent<HTMLFormElement>) { event.preventDefault(); const data = Object.fromEntries(new FormData(event.currentTarget)); const response = await fetch("/api/contracts", { method: editing ? "PATCH" : "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...data, id: editing?.id }) }); if (!response.ok) { setMessage((await response.json()).error ?? "Could not save."); return; } window.location.reload(); }
   async function archive(id: string) { if (!window.confirm("Close this contract? Financial history will be preserved.")) return; await fetch("/api/contracts", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id }) }); window.location.reload(); }
