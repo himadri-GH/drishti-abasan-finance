@@ -17,31 +17,31 @@ export default async function ContractsPage()
                                                 .map((contract) => contract.unitId)
                                         );
         const availableUnits = unitRows.filter((row) => !assignedUnitIds.has(row.id));
-         return( 
-         <main 
-            className={styles.subPage}>
-                <Link className={styles.backLink} href="/">← Back to overview</Link>
-                <div className={styles.subPageHeader}>
-                      
-                    <div>
+         return ( 
+                    <main className={styles.subPage}>
+                    <Link className={styles.backLink} href="/">← Back to overview</Link>
+                    
+                    <div className={styles.subPageHeader}>
+                        <div>
                         <p className={styles.eyebrow}>Legal & billing links</p>
                         <h1>Ownership contracts</h1>
                         <p className={styles.pageIntro}>Connect an owner to a property unit and control its recurring financial liability.</p>
-                    </div>                        
-                        <ContractManager
+                        </div> 
+                    </div>
+                    
+                    {/* Moved this outside the header! */}
+                    <ContractManager
                         contracts={contracts}
                         owners={ownerRows.map((row) => ({
                             id: row.id,
                             label: row.name,
                         }))}
                         units={availableUnits.map((row) => ({
-                                id: row.id,
-                                label: `${row.block}-${row.code}`,
-                                block: row.block,
+                            id: row.id,
+                            label: `${row.block}-${row.code}`,
+                            block: row.block,
                         }))}
-                        />
-                </div>
-                
-        </main>
-         );
+                    />
+                    </main>
+                );
 }
