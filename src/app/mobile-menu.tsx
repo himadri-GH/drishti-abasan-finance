@@ -8,6 +8,7 @@ const links = [
   ["◌", "Collections", "/collections"],
   ["↗", "Expenses", "/expenses"],
   ["⌂", "Units", "/units"],
+  ["⌂", "Owners", "/owners"],
   ["▥", "Reports", "/reports"],
   ["⌘", "Contracts", "/contracts"],
   ["≡", "Full ledger", "/ledger"],
