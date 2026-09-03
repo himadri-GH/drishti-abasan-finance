@@ -57,7 +57,31 @@ export function OwnerManager({
   }
   return (
   <>
-   
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "12px",
+        marginBottom: "16px",
+      }}
+    >
+      <span className={styles.successBadge}>
+        {owners.length} records
+      </span>
+
+      <button
+        type="button"
+        className={styles.primaryButton}
+        onClick={() => {
+          setEditing(null);
+          setMessage("");
+          setOpen(true);
+        }}
+      >
+        + Add Owner
+      </button>
+    </div>
+
     {open && (
       <div
         className={styles.modalBackdrop}
@@ -155,7 +179,7 @@ export function OwnerManager({
       </div>
     )}
 
-    <div>
+    <section className={styles.tablePanel}>
     
     <div className={styles.ownerTableHeader}>
       <strong>Owner</strong>
@@ -245,7 +269,7 @@ export function OwnerManager({
         <p>No owners yet.</p>
       )}
     </div>
-  </div>
+  </section>
   </>
 );
 }
