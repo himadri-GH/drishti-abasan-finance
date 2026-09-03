@@ -190,52 +190,59 @@ const [message, setMessage] = useState("");
   {editing ? "Save changes" : "Create contract"}
   </button>
   </form></div>}
-  <div className={styles.tablePanel}>
-  <div className={styles.tableHeader}>
-    <strong>Contract</strong>
-    <strong>Owner</strong>
-    <strong>Unit</strong>
-    <strong>Rate</strong>
-    <strong>Status</strong>
-    <strong />
-  </div>
+<div className={styles.tablePanel}>
+                        <div className={styles.tableHeader}>
+                          <strong>Contract</strong>
+                          <strong>Owner</strong>
+                          <strong>Unit</strong>
+                          <strong>Rate</strong>
+                          <strong>Status</strong>
+                          <strong />
+                        </div>
 
-  {contracts.map((contract) => (
-    <div
-      className={styles.tableRow}
-      key={contract.id}
-    >
-      <strong>{contract.code}</strong>
 
-      <span>{contract.ownerName}</span>
+                      {contracts.map((contract) => (
+                        <div
+                          className={styles.tableRow}
+                          key={contract.id}
+                        >
+                          <strong>{contract.code}</strong>
 
-      <span>{contract.unitCode}</span>
 
-      <span>
-        ₹{contract.rate.toLocaleString("en-IN")}
-      </span>
+                          <span>{contract.ownerName}</span>
 
-      <span>{contract.status}</span>
 
-      <span className={styles.adminRowActions}>
-        <button
-          className={styles.editButton}
-          onClick={() => start(contract)}
-        >
-          Edit
-        </button>
+                          <span>{contract.unitCode}</span>
 
-        {contract.status === "ACTIVE" && (
-          <button
-            className={styles.voidButton}
-            onClick={() => archive(contract.id)}
-          >
-            Close
-          </button>
-        )}
-      </span>
-    </div>
-  ))}
-</div>
+
+                          <span>
+                            ₹{contract.rate.toLocaleString("en-IN")}
+                          </span>
+
+
+                          <span>{contract.status}</span>
+
+
+                          <span className={styles.adminRowActions}>
+                            <button
+                              className={styles.editButton}
+                              onClick={() => start(contract)}
+                            >
+                              Edit
+                            </button>
+
+
+                            {contract.status === "ACTIVE" && (
+                              <button
+                                className={styles.voidButton}
+                                onClick={() => archive(contract.id)}
+                              >
+                                Close
+                              </button>
+                            )}
+                          </span>
+                        </div>
+                      ))}
+                    </div>​
   </>;
 }

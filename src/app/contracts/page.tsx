@@ -22,6 +22,7 @@ export default async function ContractsPage()
             className={styles.subPage}>
                 <Link className={styles.backLink} href="/">← Back to overview</Link>
                 <div className={styles.subPageHeader}>
+                      
                     <div>
                         <p className={styles.eyebrow}>Legal & billing links</p>
                         <h1>Ownership contracts</h1>
