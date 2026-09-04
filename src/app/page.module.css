@@ -304,7 +304,7 @@ a.secondary {
 .collectionTableHeader,
 .collectionTableRow {
   display: grid;
-  grid-template-columns: 1.3fr 1.6fr 1.2fr 1fr 0.9fr 120px;
+  grid-template-columns: 1.2fr 1.6fr 1fr 1fr 1fr 0.9fr 120px;
   gap: 15px;
   align-items: center;
   padding: 16px 21px;

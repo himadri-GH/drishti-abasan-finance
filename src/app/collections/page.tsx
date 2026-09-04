@@ -68,7 +68,7 @@ export default async function CollectionsPage() {
         <ChargeGenerator />
       </section>
 
-      {/* Monthly Maintenance Demand Table */}
+ {/* Monthly Maintenance Demand Table */}
       <section className={styles.tablePanel}>
         <div style={{ padding: "16px 21px 0" }}>
           <p className={styles.eyebrow} style={{ margin: 0 }}>Active Units</p>
@@ -78,8 +78,9 @@ export default async function CollectionsPage() {
         <div className={styles.collectionTableHeader}>
           <strong>Flat Name</strong>
           <strong>Owner Name</strong>
-          <strong>Amount Paid</strong>
-          <strong>Month Billed</strong>
+          <strong>Demand</strong>
+          <strong>Paid</strong>
+          <strong>Month</strong>
           <strong>Status</strong>
           <strong />
         </div>
@@ -99,11 +100,9 @@ export default async function CollectionsPage() {
               <div className={styles.collectionTableRow} key={charge.id}>
                 <strong>{flatName}</strong>
                 <span>{charge.ownerName}</span>
-                <span>
+                <span>₹{Number(charge.amount).toLocaleString("en-IN")}</span>
+                <span style={{ color: charge.amountPaid > 0 ? "#1b7340" : "inherit" }}>
                   ₹{Number(charge.amountPaid).toLocaleString("en-IN")}
-                  <small style={{ color: "#7a928b", fontSize: "10px", marginLeft: "4px" }}>
-                    / ₹{Number(charge.amount).toLocaleString("en-IN")}
-                  </small>
                 </span>
                 <span>{monthLabel}</span>
                 <span
@@ -117,7 +116,6 @@ export default async function CollectionsPage() {
                 >
                   {charge.isPaid ? "PAID" : charge.amountPaid > 0 ? "PARTIAL" : "OPEN"}
                 </span>
-                {/* Passes charge.amount (2205) and charge.dueDate directly */}
                 <ChargeManager id={charge.id} amount={charge.amount} dueDate={charge.dueDate} />
               </div>
             );
