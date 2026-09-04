@@ -117,6 +117,7 @@ export default async function CollectionsPage() {
                 >
                   {charge.isPaid ? "PAID" : charge.amountPaid > 0 ? "PARTIAL" : "OPEN"}
                 </span>
+                {/* Passes charge.amount (2205) and charge.dueDate directly */}
                 <ChargeManager id={charge.id} amount={charge.amount} dueDate={charge.dueDate} />
               </div>
             );

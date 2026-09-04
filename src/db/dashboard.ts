@@ -131,7 +131,7 @@ export async function getCollectionDirectory(billingMonth: string) {
       unitCode: propertyUnits.unitCode,
       block: propertyUnits.block,
       ownerName: owners.fullName,
-      amount: monthlyCharges.amountBilled,
+      amount: monthlyCharges.amountBilled, // This is 2205 for Unit 001
       amountPaid: sql<number>`coalesce((select sum(pa.amount_applied) from payment_allocations pa where pa.charge_id = ${monthlyCharges.id} and pa.status = 'ACTIVE'), 0)`,
       dueDate: monthlyCharges.dueDate,
       billingMonth: monthlyCharges.billingMonth,
