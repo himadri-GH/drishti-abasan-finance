@@ -125,8 +125,24 @@ export async function getReportSummary() {
 
 export async function getCollectionDirectory(billingMonth: string) {
   if (!db) return [];
-  return db.select({ unitCode: propertyUnits.unitCode, ownerName: owners.fullName, amount: monthlyCharges.amountBilled, amountPaid: sql<number>`coalesce((select sum(pa.amount_applied) from payment_allocations pa where pa.charge_id = ${monthlyCharges.id} and pa.status = 'ACTIVE'), 0)`, dueDate: monthlyCharges.dueDate, isPaid: monthlyCharges.isPaid }).from(monthlyCharges)
-    .innerJoin(ownershipContracts, eq(monthlyCharges.contractId, ownershipContracts.id)).innerJoin(propertyUnits, eq(ownershipContracts.propertyUnitId, propertyUnits.id)).innerJoin(owners, eq(ownershipContracts.ownerId, owners.id)).where(eq(monthlyCharges.billingMonth, billingMonth)).orderBy(propertyUnits.unitCode);
+  return db
+    .select({
+      id: monthlyCharges.id,
+      unitCode: propertyUnits.unitCode,
+      block: propertyUnits.block,
+      ownerName: owners.fullName,
+      amount: monthlyCharges.amountBilled,
+      amountPaid: sql<number>`coalesce((select sum(pa.amount_applied) from payment_allocations pa where pa.charge_id = ${monthlyCharges.id} and pa.status = 'ACTIVE'), 0)`,
+      dueDate: monthlyCharges.dueDate,
+      billingMonth: monthlyCharges.billingMonth,
+      isPaid: monthlyCharges.isPaid,
+    })
+    .from(monthlyCharges)
+    .innerJoin(ownershipContracts, eq(monthlyCharges.contractId, ownershipContracts.id))
+    .innerJoin(propertyUnits, eq(ownershipContracts.propertyUnitId, propertyUnits.id))
+    .innerJoin(owners, eq(ownershipContracts.ownerId, owners.id))
+    .where(eq(monthlyCharges.billingMonth, billingMonth))
+    .orderBy(propertyUnits.unitCode);
 }
 
 export async function getStaffDirectory() {

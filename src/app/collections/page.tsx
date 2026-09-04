@@ -2,7 +2,6 @@ import Link from "next/link";
 import { getCollectionDirectory, getPaymentOptions } from "@/db/dashboard";
 import styles from "../page.module.css";
 import { ChargeGenerator } from "../charge-generator";
-import { getChargeManagement } from "@/db/management";
 import { ChargeManager } from "../charge-manager";
 import { PaymentForm } from "../payment-form";
 import { db } from "@/db";
@@ -14,10 +13,8 @@ export const dynamic = "force-dynamic";
 
 export default async function CollectionsPage() {
   const charges = await getCollectionDirectory("2026-08");
-  const managedCharges = await getChargeManagement();
   const paymentOptions = await getPaymentOptions();
 
-  // Query all general income payments (where contractId is null or empty)
   const generalReceipts = db
     ? await db
         .select({
@@ -71,7 +68,7 @@ export default async function CollectionsPage() {
         <ChargeGenerator />
       </section>
 
-      {/* Table 1: Monthly Rental / Unit Maintenance */}
+      {/* Monthly Maintenance Demand Table */}
       <section className={styles.tablePanel}>
         <div style={{ padding: "16px 21px 0" }}>
           <p className={styles.eyebrow} style={{ margin: 0 }}>Active Units</p>
@@ -79,26 +76,36 @@ export default async function CollectionsPage() {
         </div>
 
         <div className={styles.collectionTableHeader}>
-          <strong>Unit</strong>
-          <strong>Owner</strong>
-          <strong>Charge</strong>
-          <strong>Paid</strong>
+          <strong>Flat Name</strong>
+          <strong>Owner Name</strong>
+          <strong>Amount Paid</strong>
+          <strong>Month Billed</strong>
           <strong>Status</strong>
           <strong />
         </div>
 
         {charges.length ? (
           charges.map((charge) => {
-            const managed = managedCharges.find(
-              (item) => item.unitCode === charge.unitCode && item.billingMonth === "2026-08"
-            );
+            const flatName = charge.block ? `${charge.block} - ${charge.unitCode}` : charge.unitCode;
+            const monthLabel = charge.billingMonth
+              ? new Date(`${charge.billingMonth}-01T00:00:00Z`).toLocaleDateString("en-US", {
+                  month: "short",
+                  year: "numeric",
+                  timeZone: "UTC",
+                })
+              : "Aug 2026";
 
             return (
-              <div className={styles.collectionTableRow} key={charge.unitCode}>
-                <strong>{charge.unitCode}</strong>
+              <div className={styles.collectionTableRow} key={charge.id}>
+                <strong>{flatName}</strong>
                 <span>{charge.ownerName}</span>
-                <span>₹{charge.amount.toLocaleString("en-IN")}</span>
-                <span>₹{charge.amountPaid.toLocaleString("en-IN")}</span>
+                <span>
+                  ₹{Number(charge.amountPaid).toLocaleString("en-IN")}
+                  <small style={{ color: "#7a928b", fontSize: "10px", marginLeft: "4px" }}>
+                    / ₹{Number(charge.amount).toLocaleString("en-IN")}
+                  </small>
+                </span>
+                <span>{monthLabel}</span>
                 <span
                   className={
                     charge.isPaid
@@ -110,11 +117,7 @@ export default async function CollectionsPage() {
                 >
                   {charge.isPaid ? "PAID" : charge.amountPaid > 0 ? "PARTIAL" : "OPEN"}
                 </span>
-                {managed ? (
-                  <ChargeManager id={managed.id} amount={managed.amount} dueDate={managed.dueDate} />
-                ) : (
-                  <span />
-                )}
+                <ChargeManager id={charge.id} amount={charge.amount} dueDate={charge.dueDate} />
               </div>
             );
           })
@@ -125,7 +128,7 @@ export default async function CollectionsPage() {
         )}
       </section>
 
-      {/* Table 2: General Income & Miscellaneous Receipts */}
+      {/* General Income Table */}
       <section className={styles.tablePanel} style={{ marginTop: "24px" }}>
         <div style={{ padding: "16px 21px 0" }}>
           <p className={styles.eyebrow} style={{ margin: 0 }}>Direct Receipts</p>
