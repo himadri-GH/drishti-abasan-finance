@@ -1,15 +1,18 @@
 import Link from "next/link";
-import { getCollectionDirectory } from "@/db/dashboard";
+import { getCollectionDirectory, getPaymentOptions } from "@/db/dashboard";
 import styles from "../page.module.css";
 import { ChargeGenerator } from "../charge-generator";
 import { getChargeManagement } from "@/db/management";
 import { ChargeManager } from "../charge-manager";
+import { PaymentForm } from "../payment-form";
 
 export const dynamic = "force-dynamic";
 
 export default async function CollectionsPage() {
   const charges = await getCollectionDirectory("2026-08");
   const managedCharges = await getChargeManagement();
+  const paymentOptions = await getPaymentOptions();
+
   const openCharges = charges.filter((charge) => !charge.isPaid && charge.amountPaid === 0).length;
   const partialCharges = charges.filter((charge) => !charge.isPaid && charge.amountPaid > 0).length;
 
@@ -27,9 +30,14 @@ export default async function CollectionsPage() {
             Monthly charges, due dates, and payment status for every active contract.
           </p>
         </div>
-        <span className={styles.successBadge}>
-          {charges.filter((charge) => charge.isPaid).length} paid · {partialCharges} partial · {openCharges} open
-        </span>
+
+        {/* Grouped badge and payment button side-by-side */}
+        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+          <span className={styles.successBadge}>
+            {charges.filter((charge) => charge.isPaid).length} paid · {partialCharges} partial · {openCharges} open
+          </span>
+          <PaymentForm options={paymentOptions} />
+        </div>
       </div>
 
       <section className={styles.chargePanel}>
