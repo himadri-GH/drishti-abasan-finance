@@ -16,9 +16,7 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    
-    // 1. Capture the form element BEFORE any await so it never becomes null
-    const form = event.currentTarget; 
+    const form = event.currentTarget;
     setSaving(true); 
     setMessage("");
     
@@ -33,6 +31,10 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
     } else {
       formData.set("contractId", "");
     }
+
+    // Convert calendar date (YYYY-MM-DD) into billingMonth (YYYY-MM) for backend API compatibility
+    const selectedDate = formData.get("paymentDate") ? String(formData.get("paymentDate")) : "2026-08-01";
+    formData.set("billingMonth", selectedDate.slice(0, 7));
 
     try {
       const response = await fetch("/api/payments", { 
@@ -50,16 +52,15 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
       }
       
       setMessage(`Saved as ${result.receiptNo}`); 
-      form.reset(); // Safe because 'form' was captured before the await
+      form.reset();
 
-      // 2. Auto-close modal and update UI
       window.setTimeout(() => {
         setOpen(false);
         setMessage("");
         router.refresh();
       }, 1000);
 
-    } catch (err) {
+    } catch {
       setSaving(false);
       setMessage("An unexpected error occurred. Please try again.");
     }
@@ -80,7 +81,7 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
               <button type="button" className={styles.closeButton} onClick={() => setOpen(false)} aria-label="Close">×</button>
             </div>
 
-            {/* Radio Toggle with inline size resets */}
+            {/* Radio Toggle */}
             <div style={{ display: "flex", gap: "24px", marginBottom: "16px", marginTop: "8px" }}>
               <label style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px" }}>
                 <input
@@ -140,9 +141,15 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
               </label>
             </div>
             
+            {/* Native Calendar Picker across all browsers */}
             <label>
-              Month covered
-              <input name="billingMonth" type="month" defaultValue="2026-08" required />
+              {incomeType === "rent" ? "Billing date / Month" : "Payment date"}
+              <input 
+                name="paymentDate" 
+                type="date" 
+                defaultValue="2026-08-01" 
+                required 
+              />
             </label>
             
             <label>
