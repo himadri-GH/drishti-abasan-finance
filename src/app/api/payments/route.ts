@@ -2,6 +2,7 @@ import { asc, desc, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { db } from "@/db";
 import { monthlyCharges, ownershipContracts, paymentAllocations, paymentLedger, societies, treasurySnapshots } from "@/db/schema";
+import { revalidatePath } from "next/cache";
 
 export async function POST(request: Request) {
   if (!db) return NextResponse.json({ error: "Database is not configured." }, { status: 503 });
@@ -61,5 +62,9 @@ export async function POST(request: Request) {
     if (error instanceof Error && error.message === "contract_missing") return NextResponse.json({ error: "That unit contract was not found." }, { status: 400 });
     return NextResponse.json({ error: "Could not save this payment." }, { status: 500 });
   }
+  // Force Next.js & Vercel to refresh page data immediately
+  revalidatePath("/collections");
+  revalidatePath("/");
+  revalidatePath("/ledger");
   return NextResponse.json({ receiptNo }, { status: 201 });
 }
