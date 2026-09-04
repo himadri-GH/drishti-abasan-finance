@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation"; // <-- 1. Import Next.js router
+import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 
 type PaymentOption = { id: string; unitCode: string; ownerName: string; monthlyRate: number };
@@ -12,14 +12,17 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
   const [saving, setSaving] = useState(false);
   const [incomeType, setIncomeType] = useState<"rent" | "general">("rent");
   
-  const router = useRouter(); // <-- 2. Initialize router
+  const router = useRouter();
 
   async function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault(); 
+    event.preventDefault();
+    
+    // 1. Capture the form element BEFORE any await so it never becomes null
+    const form = event.currentTarget; 
     setSaving(true); 
     setMessage("");
     
-    const formData = new FormData(event.currentTarget);
+    const formData = new FormData(form);
 
     if (incomeType === "rent") {
       const selectedContractId = formData.get("contractId");
@@ -31,29 +34,35 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
       formData.set("contractId", "");
     }
 
-    const response = await fetch("/api/payments", { 
-      method: "POST", 
-      headers: { "Content-Type": "application/json" }, 
-      body: JSON.stringify(Object.fromEntries(formData)) 
-    });
-    
-    const result = await response.json(); 
-    setSaving(false);
-    
-    if (!response.ok) { 
-      setMessage(result.error ?? "Could not save payment."); 
-      return; 
+    try {
+      const response = await fetch("/api/payments", { 
+        method: "POST", 
+        headers: { "Content-Type": "application/json" }, 
+        body: JSON.stringify(Object.fromEntries(formData)) 
+      });
+      
+      const result = await response.json(); 
+      setSaving(false);
+      
+      if (!response.ok) { 
+        setMessage(result.error ?? "Could not save payment."); 
+        return; 
+      }
+      
+      setMessage(`Saved as ${result.receiptNo}`); 
+      form.reset(); // Safe because 'form' was captured before the await
+
+      // 2. Auto-close modal and update UI
+      window.setTimeout(() => {
+        setOpen(false);
+        setMessage("");
+        router.refresh();
+      }, 1000);
+
+    } catch (err) {
+      setSaving(false);
+      setMessage("An unexpected error occurred. Please try again.");
     }
-    
-    setMessage(`Saved as ${result.receiptNo}`); 
-    event.currentTarget.reset(); 
-    
-    // <-- 3. Update the timeout to close modal and refresh Next.js state
-    window.setTimeout(() => {
-      setOpen(false);      // Close the modal
-      setMessage("");      // Clear message for next time
-      router.refresh();    // Tell Next.js to fetch fresh data from Turso
-    }, 1200);              // Give admin 1.2s to read the success message
   }
 
   return (
@@ -71,21 +80,25 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
               <button type="button" className={styles.closeButton} onClick={() => setOpen(false)} aria-label="Close">×</button>
             </div>
 
-            {/* Radio Toggle */}
-            <div style={{ display: "flex", gap: "20px", marginBottom: "15px" }}>
-              <label style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "6px", fontWeight: "normal" }}>
+            {/* Radio Toggle with inline size resets */}
+            <div style={{ display: "flex", gap: "24px", marginBottom: "16px", marginTop: "8px" }}>
+              <label style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px" }}>
                 <input
                   type="radio"
+                  name="typeSelector"
                   checked={incomeType === "rent"}
                   onChange={() => setIncomeType("rent")}
+                  style={{ width: "16px", height: "16px", margin: 0, cursor: "pointer" }}
                 />
                 Monthly rental
               </label>
-              <label style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "6px", fontWeight: "normal" }}>
+              <label style={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "13px" }}>
                 <input
                   type="radio"
+                  name="typeSelector"
                   checked={incomeType === "general"}
                   onChange={() => setIncomeType("general")}
+                  style={{ width: "16px", height: "16px", margin: 0, cursor: "pointer" }}
                 />
                 General income
               </label>
