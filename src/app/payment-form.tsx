@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation"; // <-- 1. Import Next.js router
 import styles from "./page.module.css";
 
 type PaymentOption = { id: string; unitCode: string; ownerName: string; monthlyRate: number };
@@ -9,9 +10,9 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
-  
-  // Track which type of payment is being recorded
   const [incomeType, setIncomeType] = useState<"rent" | "general">("rent");
+  
+  const router = useRouter(); // <-- 2. Initialize router
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); 
@@ -20,16 +21,13 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
     
     const formData = new FormData(event.currentTarget);
 
-    // Safeguard: Format the data so the backend receives exactly what it expects
     if (incomeType === "rent") {
       const selectedContractId = formData.get("contractId");
       const selectedOption = options.find(opt => opt.id === selectedContractId);
       if (selectedOption) {
-        // Silently pass the owner's name as the payer to satisfy the database
         formData.set("payerName", selectedOption.ownerName);
       }
     } else {
-      // Clear out the contract ID for general income
       formData.set("contractId", "");
     }
 
@@ -49,7 +47,13 @@ export function PaymentForm({ options }: { options: PaymentOption[] }) {
     
     setMessage(`Saved as ${result.receiptNo}`); 
     event.currentTarget.reset(); 
-    window.setTimeout(() => window.location.reload(), 700);
+    
+    // <-- 3. Update the timeout to close modal and refresh Next.js state
+    window.setTimeout(() => {
+      setOpen(false);      // Close the modal
+      setMessage("");      // Clear message for next time
+      router.refresh();    // Tell Next.js to fetch fresh data from Turso
+    }, 1200);              // Give admin 1.2s to read the success message
   }
 
   return (
